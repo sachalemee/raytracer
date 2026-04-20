@@ -1,0 +1,9 @@
+-I./include
+-I./include/Exceptions
+-I./include/Factory
+-I./include/Interfaces
+-I./include/Lights
+-I./include/Math
+-I./include/Primitives
+-I./include/Raytracer
+-I./include/Templates
