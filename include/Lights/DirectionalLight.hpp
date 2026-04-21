@@ -8,7 +8,8 @@
 #ifndef DIRECTIONALLIGHT_HPP_
 #define DIRECTIONALLIGHT_HPP_
 
-class DirectionalLight {
+#include "ILight.hpp"
+class DirectionalLight : public RayTracer::Interfaces::ILight {
     public:
         DirectionalLight();
         ~DirectionalLight();

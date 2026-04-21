@@ -16,13 +16,13 @@
 
 #define SCENE_FILE_EXTENSION ".json"
 
-//intersection struct
+//intersection struct, contain hit infos
 struct hitRecord {
     Math::Point3D point; //intersection point
     Math::Vector3D normal; // normal at the surface
     double t; //distance along the radius
-    Math::Vector3D color;
-    bool frontFace;
+    Math::Vector3D color; //material color
+    bool frontFace; //ray hits front face or back face
 };
 
 #endif /* !RAYTRACER_HPP_ */

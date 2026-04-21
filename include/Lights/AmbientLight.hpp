@@ -8,7 +8,8 @@
 #ifndef AMBIENTLIGHT_HPP_
 #define AMBIENTLIGHT_HPP_
 
-class AmbientLight {
+#include "ILight.hpp"
+class AmbientLight : public RayTracer::Interfaces::ILight {
     public:
         AmbientLight();
         ~AmbientLight();
