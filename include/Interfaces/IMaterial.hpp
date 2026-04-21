@@ -16,7 +16,7 @@ namespace RayTracer {
             // MUST BE PURE INTERFACES -> virtual exempliGratia() = 0;
             public:
                 virtual ~IMaterial() = default;
-                virtual Math::Vector3D color(const hitRecord &hit) const = 0; 
+                virtual Math::Vector3D color(const hitRecord &hit) const = 0;
             
             protected:
             private:
