@@ -2,11 +2,11 @@
 ** EPITECH PROJECT, 2026
 ** raytracer
 ** File description:
-** Raycaster
+** Raytracer
 */
 
-#ifndef RAYCASTER_HPP_
-#define RAYCASTER_HPP_
+#ifndef RAYTRACER_HPP_
+#define RAYTRACER_HPP_
 
 #include "Point3D.hpp"
 #include "Vector3D.hpp"
@@ -25,4 +25,4 @@ struct hitRecord {
     bool frontFace;
 };
 
-#endif /* !RAYCASTER_HPP_ */
+#endif /* !RAYTRACER_HPP_ */

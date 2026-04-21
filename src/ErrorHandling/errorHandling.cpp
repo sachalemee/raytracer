@@ -7,7 +7,7 @@
 
 #include <filesystem>
 #include <iostream>
-#include "Raycaster.hpp"
+#include "RayTracer.hpp"
 
 static int helper(void)
 {

@@ -8,13 +8,17 @@
 #ifndef ILIGHT_HPP_
 #define ILIGHT_HPP_
 
-class ILight {
-    // MUST BE PURE INTERFACES -> virtual exempliGratia() = 0;
-    public:
-        virtual ~ILight() = default;
-
-    protected:
-    private:
-};
+namespace RayTracer {
+    namespace Interfaces {
+        class ILight {
+            // MUST BE PURE INTERFACES -> virtual exempliGratia() = 0;
+            public:
+                virtual ~ILight() = default;
+            
+            protected:
+            private:
+        };
+    }
+}
 
 #endif /* !ILIGHT_HPP_ */

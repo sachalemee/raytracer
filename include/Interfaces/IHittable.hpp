@@ -8,13 +8,22 @@
 #ifndef IHITTABLE_HPP_
 #define IHITTABLE_HPP_
 
-class IHittable {
-    // MUST BE PURE INTERFACES -> virtual exempliGratia() = 0;
-    public:
-        virtual ~IHittable() = default;
+#include <optional>
+#include "Ray.hpp"
+#include "RayTracer.hpp"
 
-    protected:
-    private:
-};
+namespace RayTracer {
+    namespace Interfaces {    
+        class IHittable {
+            // MUST BE PURE INTERFACES -> virtual exempliGratia() = 0;
+            public:
+                virtual ~IHittable() = default;
+                virtual std::optional<hitRecord> hits(const RayTracer::Ray &ray) const = 0;
+            
+            protected:
+            private:
+        };
+    }
+}
 
 #endif /* !IHITTABLE_HPP_ */

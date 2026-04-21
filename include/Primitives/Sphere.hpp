@@ -8,12 +8,13 @@
 #ifndef SPHERE_HPP_
 #define SPHERE_HPP_
 
+#include "IHittable.hpp"
 #include "Point3D.hpp"
 #include "Ray.hpp"
 
 namespace RayTracer {
 
-    class Sphere {
+    class Sphere : public Interfaces::IHittable {
         public:
             Sphere(Math::Point3D center, double radius);
             ~Sphere() = default;

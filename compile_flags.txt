@@ -5,5 +5,5 @@
 -I./include/Lights
 -I./include/Math
 -I./include/Primitives
--I./include/Raytracer
+-I./include/RayTracer
 -I./include/Templates
