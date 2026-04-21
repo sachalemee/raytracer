@@ -18,7 +18,7 @@ namespace RayTracer {
             Sphere(Math::Point3D center, double radius);
             ~Sphere() = default;
 
-        bool hits(RayTracer::Ray ray);
+        std::optional<hitRecord> hits(const RayTracer::Ray &ray) const override;
 
         Math::Point3D _sphCenter;
         double _sphRadius;
