@@ -7,11 +7,7 @@
 
 #include <filesystem>
 #include <iostream>
-
-// MUST link to a .hpp file
-#define IS_EXIT_FAILURE 84
-#define IS_EXIT_SUCCESS 0
-#define SCENE_FILE_EXTENSION ".json"
+#include "Raycaster.hpp"
 
 static int helper(void)
 {
