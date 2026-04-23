@@ -9,7 +9,6 @@
 #define VECTOR3D_HPP_
 
 namespace Math {
-
     class Vector3D {
         public:
             Vector3D();
