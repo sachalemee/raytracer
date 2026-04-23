@@ -20,6 +20,7 @@ Math::Vector3D DirectionalLight::getIntensity() const
 
 Math::Vector3D DirectionalLight::getDirection(const Math::Point3D &point) const
 {
+    (void)point;
     return _direction;
 }
 

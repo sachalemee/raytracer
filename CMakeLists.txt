@@ -16,9 +16,13 @@ endif()
 
 include_directories(
     include 
-    include/Math 
-    include/Primitives 
-    include/Raytracer
+    include/Exceptions
+    include/Factory
+    include/Interfaces
+    include/Lights
+    include/Math
+    include/Primitives
+    include/RayTracer
     include/Templates
     ${LIBCONFIGPP_INCLUDE_DIRS}
 )
