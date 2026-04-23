@@ -46,6 +46,13 @@ sudo apt-get install libsfml-dev
 
 Want to learn more ? Check out the [SFML Documentation](https://www.sfml-dev.org/) !
 
+4. **lauch project:**
+```sh
+cmake -S . -B build
+cmake --build build
+./raytracer <SCENE_FILE>
+```
+
 ## Documentation
 
 See [RAYTRACER Documentation](doc/DOCUMENTATION.md)

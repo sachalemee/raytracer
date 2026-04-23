@@ -5,19 +5,21 @@
 ** main
 */
 
+#include <iostream>
 #include "Camera.hpp"
 #include "Sphere.hpp"
 #include "Point3D.hpp"
-#include <iostream>
+#include "RayTracer.hpp"
 
-int main()
+int main(int ac, char **av)
 {
     RayTracer::Camera cam;
     RayTracer::Sphere s(Math::Point3D(0, 0, -1), 0.2);
     int width = 100;
     int height = 50;
 
-    // MUST implement error handling, done but have to link it with makefile and corresponding .hpp file
+    if (error_handling(ac, av) != IS_EXIT_SUCCESS)
+        return IS_EXIT_FAILURE;
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             double u = (double)x / width;
