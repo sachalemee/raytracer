@@ -13,7 +13,6 @@
 #include "Rectangle3D.hpp"
 
 namespace RayTracer {
-
     class Camera {
         public:
             Camera();

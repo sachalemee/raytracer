@@ -12,7 +12,6 @@
 #include "Vector3D.hpp"
 
 namespace RayTracer {
-
     class Ray {
         public:
             Ray();

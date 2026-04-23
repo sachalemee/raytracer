@@ -17,6 +17,7 @@ int main()
     int width = 100;
     int height = 50;
 
+    // MUST implement error handling, done but have to link it with makefile and corresponding .hpp file
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             double u = (double)x / width;
