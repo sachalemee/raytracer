@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <iostream>
 #include "RayTracer.hpp"
+#include "Exception.hpp"
 
 static int helper(void)
 {
@@ -23,12 +24,10 @@ int error_handling(int ac, char **av)
         return helper();
     std::filesystem::path path(av[1]);
     if (!std::filesystem::exists(path)) {
-        std::cerr << "Error: scene file'" << av[1] << "' not found\n";
-        return IS_EXIT_FAILURE;
+        throw RayTracer::Exceptions::fileNotFound();
     }
     if (path.extension() != SCENE_FILE_EXTENSION) {
-        std::cerr << "Error: '" << av[1] << "' must be a '"<< SCENE_FILE_EXTENSION << "' extension file\n";
-        return IS_EXIT_FAILURE;
+        throw RayTracer::Exceptions::invalidExtension();
     }
     return IS_EXIT_SUCCESS;
 }
