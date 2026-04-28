@@ -6,32 +6,34 @@
 */
 
 #include <iostream>
-#include "Camera.hpp"
-#include "Sphere.hpp"
-#include "Point3D.hpp"
 #include "RayTracer.hpp"
+#include "SceneBuilder.hpp"
+#include "Exception.hpp"
+#include <libconfig.h++>
 
 int main(int ac, char **av)
 {
-    RayTracer::Camera cam;
-    RayTracer::Sphere s(Math::Point3D(0, 0, -1), 0.2);
-    int width = 100;
-    int height = 50;
-
-    if (error_handling(ac, av) != IS_EXIT_SUCCESS)
+    try {
+        if (error_handling(ac, av) != IS_EXIT_SUCCESS)
+            return IS_EXIT_FAILURE;
+        RayTracer::Scene scene = SceneBuilder::build(av[1]);
+        // TODO: Use here the scene to render image
+        std::cout << "Scene parsed successfully!\n";
+    } catch (const RayTracer::Exceptions::fileNotFound &e) {
+        std::cerr << e.what() << std::endl;
         return IS_EXIT_FAILURE;
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            double u = (double)x / width;
-            double v = (double)(height - 1 - y) / height;
-            RayTracer::Ray r = cam.ray(u, v);
-            if (s.hits(r)) {
-                std::cout << "O";
-            } else {
-                std::cout << " ";
-            }
-        }
-        std::cout << "\n";
-    }
-    return 0;
+    } catch (const RayTracer::Exceptions::invalidExtension &e) {
+        std::cerr << e.what() << std::endl;
+        return IS_EXIT_FAILURE;
+    } catch (const libconfig::SettingTypeException &e) {
+        std::cerr << "Error: Invalid setting type in config file" << std::endl;
+        return IS_EXIT_FAILURE;
+    } catch (const libconfig::SettingNotFoundException &e) {
+        std::cerr << "Error: Missing setting in config file" << std::endl;
+        return IS_EXIT_FAILURE;
+    } catch (const std::exception &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return IS_EXIT_FAILURE;
+    }    
+    return IS_EXIT_SUCCESS;
 }

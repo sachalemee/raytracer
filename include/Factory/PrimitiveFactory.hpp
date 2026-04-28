@@ -16,10 +16,10 @@
 // Factory
 class PrimitiveFactory {
     public:
-        static std::unique_ptr<Interfaces::IHittable> createSphere(const libconfig::Setting &setting);
-        static std::unique_ptr<Interfaces::IHittable> createPlane(const libconfig::Setting &setting);
-        static std::unique_ptr<Interfaces::IHittable> createCylinder(const libconfig::Setting &setting);
-        static std::unique_ptr<Interfaces::IHittable> createCone(const libconfig::Setting &setting);
+        static std::unique_ptr<RayTracer::Interfaces::IHittable> createSphere(const libconfig::Setting &setting);
+        static std::unique_ptr<RayTracer::Interfaces::IHittable> createPlane(const libconfig::Setting &setting);
+        static std::unique_ptr<RayTracer::Interfaces::IHittable> createCylinder(const libconfig::Setting &setting);
+        static std::unique_ptr<RayTracer::Interfaces::IHittable> createCone(const libconfig::Setting &setting);
 
     private:
         PrimitiveFactory() = delete;
