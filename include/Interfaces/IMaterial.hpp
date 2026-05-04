@@ -19,9 +19,7 @@ namespace RayTracer {
 
                 /// Returns the color/albedo of the material
                 virtual Math::Vector3D getColor() const = 0;
-            
-            protected:
-            private:
+
         };
     }
 }

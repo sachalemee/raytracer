@@ -20,13 +20,11 @@ namespace RayTracer {
 
                 // return intensity/color contribution of the light
                 virtual Math::Vector3D getIntensity() const = 0;
-                
+
                 // return direction from point to light source
                 // for ambient light direction is irrelevant
                 virtual Math::Vector3D getDirection(const Math::Point3D &point) const = 0;
-            
-            protected:
-            private:
+
         };
     }
 }
