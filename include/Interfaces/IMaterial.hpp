@@ -13,6 +13,7 @@
 namespace RayTracer {
     namespace Interfaces {
         class IMaterial {
+            // MUST BE PURE INTERFACES -> virtual exempliGratia() = 0;
             public:
                 virtual ~IMaterial() = default;
 

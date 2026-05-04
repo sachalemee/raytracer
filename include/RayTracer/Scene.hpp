@@ -12,14 +12,34 @@
 #include <vector>
 #include "IHittable.hpp"
 #include "ILight.hpp"
+#include "Camera.hpp"
 
 namespace RayTracer {
     class Scene {
         public:
-            void add(std::unique_ptr<Interfaces::IHittable> primitive);
-            void add(std::unique_ptr<Interfaces::ILight> light);
+            Scene();
+            ~Scene() = default;
+            
+            /// Add a primitive to the scene
+            void addPrimitive(std::unique_ptr<Interfaces::IHittable> primitive);
+            
+            /// Add a light source to the scene
+            void addLight(std::unique_ptr<Interfaces::ILight> light);
+            
+            /// Set the camera
+            void setCamera(const Camera &camera);
+            
+            /// Get the camera
+            const Camera &getCamera() const;
+            
+            /// Get all primitives
+            const std::vector<std::unique_ptr<Interfaces::IHittable>> &getPrimitives() const;
+            
+            /// Get all lights
+            const std::vector<std::unique_ptr<Interfaces::ILight>> &getLights() const;
 
         private:
+            Camera _camera;
             std::vector<std::unique_ptr<Interfaces::IHittable>> _primitives;
             std::vector<std::unique_ptr<Interfaces::ILight>> _lights;
     };
