@@ -14,7 +14,7 @@
 #define IS_EXIT_SUCCESS 0
 #define IS_EXIT_FAILURE 84
 
-#define SCENE_FILE_EXTENSION ".json"
+#define SCENE_FILE_EXTENSION ".cfg"
 
 //intersection struct, contain hit infos
 struct hitRecord {
@@ -24,5 +24,7 @@ struct hitRecord {
     Math::Vector3D color; //material color
     bool frontFace; //ray hits front face or back face
 };
+
+int error_handling(int ac, char **av);
 
 #endif /* !RAYTRACER_HPP_ */
