@@ -14,7 +14,7 @@ RayTracer::Camera::Camera() : _origin(0, 0, 0)
 {
 }
 
-RayTracer::Ray RayTracer::Camera::ray(double x, double y)
+RayTracer::Ray RayTracer::Camera::ray(double x, double y) const
 {
     Math::Point3D pixel = _screen.pointAt(x, y);
     Math::Vector3D direction(
