@@ -19,11 +19,16 @@ namespace RayTracer {
         public:
             Scene();
             ~Scene() = default;
-            
+
+            Scene(const Scene &) = delete;
+            Scene &operator=(const Scene &) = delete;
+            Scene(Scene &&) = default;
+            Scene &operator=(Scene &&) = default;
+
             /// add primitive to the scene
-            void addPrimitive(std::unique_ptr<Interfaces::IHittable> primitive);
+            void add(std::unique_ptr<Interfaces::IHittable> primitive);
             /// add light source to the scene
-            void addLight(std::unique_ptr<Interfaces::ILight> light);
+            void add(std::unique_ptr<Interfaces::ILight> light);
             /// set camera
             void setCamera(const Camera &camera);
             /// get camera
