@@ -18,7 +18,7 @@ namespace RayTracer {
             Camera();
             ~Camera() = default;
             
-            Ray ray(double u, double v);
+            Ray ray(double u, double v) const;
 
             Math::Point3D _origin;
             Rectangle3D _screen;

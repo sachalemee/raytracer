@@ -8,14 +8,14 @@
 #include "Rectangle3D.hpp"
 #include "Point3D.hpp"
 
-Rectangle3D::Rectangle3D() 
+RayTracer::Rectangle3D::Rectangle3D() 
     : _origin(Math::Point3D(-0.5, -0.5, -1.5)),
       _bottomSide(Math::Vector3D(1, 0, 0)),
       _leftSide(Math::Vector3D(0, 1, 0))
 {
 }
 
-Math::Point3D Rectangle3D::pointAt(double u, double v)
+Math::Point3D RayTracer::Rectangle3D::pointAt(double u, double v) const
 {
     return Math::Point3D(
         _origin._xCmp + _bottomSide._xCmp * u + _leftSide._xCmp * v,

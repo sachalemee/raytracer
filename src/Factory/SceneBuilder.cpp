@@ -6,8 +6,10 @@
 */
 
 #include "SceneBuilder.hpp"
+#include "Camera.hpp"
+#include "Point3D.hpp"
 #include "PrimitiveFactory.hpp"
-#include "Exception.hpp"
+#include "Scene.hpp"
 #include <libconfig.h++>
 #include <cmath>
 
@@ -53,7 +55,7 @@ RayTracer::Scene SceneBuilder::build(const std::string &configFile)
         for (int i = 0; i < spheres.getLength(); i++) {
             try {
                 auto sphere = PrimitiveFactory::createSphere(spheres[i]);
-                scene.add(std::move(sphere));
+                scene.addPrimitive(std::move(sphere));
             } catch (...) {
                 // Skip invalid spheres (need to implement)
             }

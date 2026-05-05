@@ -7,11 +7,7 @@
 
 #include "PrimitiveFactory.hpp"
 #include "Sphere.hpp"
-#include "Plane.hpp"
-#include "Cylinder.hpp"
-#include "Cone.hpp"
 #include "Point3D.hpp"
-#include "Vector3D.hpp"
 #include <libconfig.h++>
 #include <memory>
 

@@ -9,7 +9,6 @@
 #define SCENEBUILDER_HPP_
 
 #include <string>
-#include <memory>
 #include "Scene.hpp"
 #include "Camera.hpp"
 #include <libconfig.h++>

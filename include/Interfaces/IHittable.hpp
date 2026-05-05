@@ -19,9 +19,7 @@ namespace RayTracer {
             public:
                 virtual ~IHittable() = default;
                 virtual std::optional<hitRecord> hits(const RayTracer::Ray &ray) const = 0;
-            
-            protected:
-            private:
+
         };
     }
 }

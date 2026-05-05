@@ -13,14 +13,13 @@
 namespace RayTracer {
     namespace Interfaces {
         class IMaterial {
+            // MUST BE PURE INTERFACES -> virtual exempliGratia() = 0;
             public:
                 virtual ~IMaterial() = default;
 
                 /// Returns the color/albedo of the material
                 virtual Math::Vector3D getColor() const = 0;
-            
-            protected:
-            private:
+
         };
     }
 }

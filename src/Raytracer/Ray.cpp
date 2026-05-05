@@ -13,6 +13,6 @@ RayTracer::Ray::Ray() : _origin(), _direction()
 {
 }
 
-RayTracer::Ray::Ray(Math::Point3D &origin, Math::Vector3D &direction) : _origin(origin), _direction(direction)
+RayTracer::Ray::Ray(const Math::Point3D &origin, const Math::Vector3D &direction) : _origin(origin), _direction(direction)
 {
 }
