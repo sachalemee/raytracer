@@ -55,7 +55,7 @@ RayTracer::Scene SceneBuilder::build(const std::string &configFile)
         for (int i = 0; i < spheres.getLength(); i++) {
             try {
                 auto sphere = PrimitiveFactory::createSphere(spheres[i]);
-                scene.addPrimitive(std::move(sphere));
+                scene.add(std::move(sphere));
             } catch (...) {
                 // Skip invalid spheres (need to implement)
             }
