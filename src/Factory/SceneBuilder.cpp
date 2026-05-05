@@ -67,7 +67,7 @@ RayTracer::Scene SceneBuilder::build(const std::string &configFile)
         for (int i = 0; i < planes.getLength(); i++) {
             try {
                 auto plane = PrimitiveFactory::createPlane(planes[i]);
-                scene.addPrimitive(std::move(plane));
+                scene.add(std::move(plane));
             } catch (...) {
                 // Skip invalid planes (need to implement)
             }
