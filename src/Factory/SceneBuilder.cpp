@@ -61,6 +61,18 @@ RayTracer::Scene SceneBuilder::build(const std::string &configFile)
             }
         }
     }
+    // Parse planes
+    if (primitives.exists("planes")) {
+        const libconfig::Setting &planes = primitives["planes"];
+        for (int i = 0; i < planes.getLength(); i++) {
+            try {
+                auto plane = PrimitiveFactory::createPlane(planes[i]);
+                scene.addPrimitive(std::move(plane));
+            } catch (...) {
+                // Skip invalid planes (need to implement)
+            }
+        }
+    }
 
     return scene;
 }
