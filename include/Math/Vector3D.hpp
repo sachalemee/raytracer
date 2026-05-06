@@ -8,9 +8,6 @@
 #ifndef VECTOR3D_HPP_
 #define VECTOR3D_HPP_
 
-#define PI 3.141592653589793
-constexpr double EPSILON = 1e-6;
-
 namespace Math {
     class Vector3D {
         public:
