@@ -5,13 +5,13 @@
 ** SceneBuilder
 */
 
+#include <libconfig.h++>
+#include <cmath>
 #include "SceneBuilder.hpp"
 #include "Camera.hpp"
 #include "Point3D.hpp"
 #include "PrimitiveFactory.hpp"
 #include "Scene.hpp"
-#include <libconfig.h++>
-#include <cmath>
 
 RayTracer::Camera SceneBuilder::parseCamera(const libconfig::Setting &cameraSetting)
 {
