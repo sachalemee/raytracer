@@ -8,23 +8,34 @@
 #ifndef PLANE_HPP_
 #define PLANE_HPP_
 
+
 #include "IHittable.hpp"
+#include "ITransformable.hpp"
 #include "IMaterial.hpp"
 #include <memory>
+#include <optional>
 
-// must
+
 namespace RayTracer {
-    class Plane : public Interfaces::IHittable {
-        public:
-            Plane(Math::Vector3D normal, double distance, std::unique_ptr<Interfaces::IMaterial> material);
-            ~Plane() = default;
+    class Plane : public Interfaces::IHittable, public Interfaces::ITransformable {
+    public:
+        Plane(const Math::Point3D &position, const Math::Vector3D &normal,
+            std::unique_ptr<Interfaces::IMaterial> material = nullptr);
+        ~Plane() = default;
 
-            std::optional<hitRecord> hits(const RayTracer::Ray &ray) const override;
+        std::optional<hitRecord> hits(const RayTracer::Ray &ray) const override;
 
-        private:
-            std::unique_ptr<Interfaces::IMaterial> _material;
-            Math::Vector3D _normal;
-            double _distance;
+        void translate(const Math::Vector3D &offset) override;
+        void rotateX(double angleDegrees) override;
+        void rotateY(double angleDegrees) override;
+        void rotateZ(double angleDegrees) override;
+
+    private:
+        void _normalizeNormal();
+
+        Math::Point3D _position;
+        Math::Vector3D _normal;
+        std::unique_ptr<Interfaces::IMaterial> _material;
     };
 }
 
