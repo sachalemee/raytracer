@@ -8,19 +8,25 @@
 #ifndef SPHERE_HPP_
 #define SPHERE_HPP_
 
-#include "IHittable.hpp"
-#include "IMaterial.hpp"
 #include <memory>
 #include <optional>
-
+#include "IHittable.hpp"
+#include "IMaterial.hpp"
+#include "ITransformable.hpp"
 
 // must
 namespace RayTracer {
-    class Sphere : public Interfaces::IHittable {
+    class Sphere : public Interfaces::IHittable,
+                    public Interfaces::ITransformable {
     public:
-        Sphere(Math::Point3D center, double radius /*, std::unique_ptr<Interfaces::IMaterial> material*/);
+        Sphere(const Math::Point3D &center, double radius /*, std::unique_ptr<Interfaces::IMaterial> material*/);
         ~Sphere() = default;
         std::optional<hitRecord> hits(const RayTracer::Ray &ray) const override;
+        void translate(const Math::Vector3D &offset) override;
+        void rotateX(double angleDegrees) override;
+        void rotateY(double angleDegrees) override;
+        void rotateZ(double angleDegrees) override;
+
     private:
         Math::Point3D _sphCenter;
         double _sphRadius;

@@ -17,7 +17,8 @@
 
 
 namespace RayTracer {
-    class Triangle : public Interfaces::IHittable, public Interfaces::ITransformable {
+    class Triangle : public Interfaces::IHittable,
+        public Interfaces::ITransformable {
     public:
         Triangle(const Math::Point3D &v0, const Math::Point3D &v1,
             const Math::Point3D &v2,

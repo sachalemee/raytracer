@@ -5,80 +5,75 @@
 ** Triangle
 */
 
-#include "triangle.hpp"
-#include "Vector3D.hpp"
 #include <cmath>
-#include <numbers>
 #include <optional>
 #include <utility>
+#include "triangle.hpp"
+#include "Vector3D.hpp"
 
-namespace {
-    constexpr double EPSILON = 1e-6;
+Math::Vector3D computeEdge(const Math::Point3D &from, const Math::Point3D &to)
+{
+    return Math::Vector3D(to._xCmp - from._xCmp,
+        to._yCmp - from._yCmp,
+        to._zCmp - from._zCmp);
+}
 
-    Math::Vector3D computeEdge(const Math::Point3D &from, const Math::Point3D &to)
-    {
-        return Math::Vector3D(to._xCmp - from._xCmp,
-            to._yCmp - from._yCmp,
-            to._zCmp - from._zCmp);
-    }
+Math::Vector3D computeCrossProduct(const Math::Vector3D &a,
+    const Math::Vector3D &b)
+{
+    return Math::Vector3D(
+        a._yCmp * b._zCmp - a._zCmp * b._yCmp,
+        a._zCmp * b._xCmp - a._xCmp * b._zCmp,
+        a._xCmp * b._yCmp - a._yCmp * b._xCmp);
+}
 
-    Math::Vector3D computeCrossProduct(const Math::Vector3D &a,
-        const Math::Vector3D &b)
-    {
-        return Math::Vector3D(
-            a._yCmp * b._zCmp - a._zCmp * b._yCmp,
-            a._zCmp * b._xCmp - a._xCmp * b._zCmp,
-            a._xCmp * b._yCmp - a._yCmp * b._xCmp);
-    }
+double computeDotProduct(const Math::Vector3D &a, const Math::Vector3D &b)
+{
+    return a._xCmp * b._xCmp + a._yCmp * b._yCmp + a._zCmp * b._zCmp;
+}
 
-    double computeDotProduct(const Math::Vector3D &a, const Math::Vector3D &b)
-    {
-        return a._xCmp * b._xCmp + a._yCmp * b._yCmp + a._zCmp * b._zCmp;
-    }
+hitRecord buildhitRecord(const RayTracer::Ray &ray, double distance,
+    const Math::Vector3D &normal)
+{
+    hitRecord record;
+    record.point = Math::Point3D(
+        ray._origin._xCmp + ray._direction._xCmp * distance,
+        ray._origin._yCmp + ray._direction._yCmp * distance,
+        ray._origin._zCmp + ray._direction._zCmp * distance);
+    record.normal = normal;
+    record.t = distance;
+    record.frontFace = true;
+    return record;
+}
 
-    hitRecord buildhitRecord(const RayTracer::Ray &ray, double distance,
-        const Math::Vector3D &normal)
-    {
-        hitRecord record;
-        record.point = Math::Point3D(
-            ray._origin._xCmp + ray._direction._xCmp * distance,
-            ray._origin._yCmp + ray._direction._yCmp * distance,
-            ray._origin._zCmp + ray._direction._zCmp * distance);
-        record.normal = normal;
-        record.t = distance;
-        record.frontFace = true;
-        return record;
-    }
+std::pair<double, double> computeAngleTrig(double angleDegrees)
+{
+    const double angleRad = angleDegrees * PI / 180.0;
+    return {std::cos(angleRad), std::sin(angleRad)};
+}
 
-    std::pair<double, double> computeAngleTrig(double angleDegrees)
-    {
-        const double angleRad = angleDegrees * std::numbers::pi / 180.0;
-        return {std::cos(angleRad), std::sin(angleRad)};
-    }
+void rotatePointAroundX(Math::Point3D &point, double cosA, double sinA)
+{
+    const double newY = point._yCmp * cosA - point._zCmp * sinA;
+    const double newZ = point._yCmp * sinA + point._zCmp * cosA;
+    point._yCmp = newY;
+    point._zCmp = newZ;
+}
 
-    void rotatePointAroundX(Math::Point3D &point, double cosA, double sinA)
-    {
-        const double newY = point._yCmp * cosA - point._zCmp * sinA;
-        const double newZ = point._yCmp * sinA + point._zCmp * cosA;
-        point._yCmp = newY;
-        point._zCmp = newZ;
-    }
+void rotatePointAroundY(Math::Point3D &point, double cosA, double sinA)
+{
+    const double newX = point._xCmp * cosA + point._zCmp * sinA;
+    const double newZ = -point._xCmp * sinA + point._zCmp * cosA;
+    point._xCmp = newX;
+    point._zCmp = newZ;
+}
 
-    void rotatePointAroundY(Math::Point3D &point, double cosA, double sinA)
-    {
-        const double newX = point._xCmp * cosA + point._zCmp * sinA;
-        const double newZ = -point._xCmp * sinA + point._zCmp * cosA;
-        point._xCmp = newX;
-        point._zCmp = newZ;
-    }
-
-    void rotatePointAroundZ(Math::Point3D &point, double cosA, double sinA)
-    {
-        const double newX = point._xCmp * cosA - point._yCmp * sinA;
-        const double newY = point._xCmp * sinA + point._yCmp * cosA;
-        point._xCmp = newX;
-        point._yCmp = newY;
-    }
+void rotatePointAroundZ(Math::Point3D &point, double cosA, double sinA)
+{
+    const double newX = point._xCmp * cosA - point._yCmp * sinA;
+    const double newY = point._xCmp * sinA + point._yCmp * cosA;
+    point._xCmp = newX;
+    point._yCmp = newY;
 }
 
 RayTracer::Triangle::Triangle(const Math::Point3D &v0, const Math::Point3D &v1,

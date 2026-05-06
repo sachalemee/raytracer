@@ -5,130 +5,125 @@
 ** Cylinder
 */
 
+#include <cmath>
+#include <optional>
 #include "Cylinder.hpp"
 #include "Template.hpp"
 #include "Vector3D.hpp"
-#include <cmath>
-#include <numbers>
-#include <optional>
 
-namespace {
-    constexpr double EPSILON = 1e-6;
+Math::Vector3D computeVectorBetween(const Math::Point3D &from,
+    const Math::Point3D &to)
+{
+    return Math::Vector3D(
+        to._xCmp - from._xCmp,
+        to._yCmp - from._yCmp,
+        to._zCmp - from._zCmp);
+}
 
-    Math::Vector3D computeVectorBetween(const Math::Point3D &from,
-        const Math::Point3D &to)
-    {
-        return Math::Vector3D(
-            to._xCmp - from._xCmp,
-            to._yCmp - from._yCmp,
-            to._zCmp - from._zCmp);
-    }
+Math::Vector3D scale(const Math::Vector3D &vector, double factor)
+{
+    return Math::Vector3D(vector._xCmp * factor,
+        vector._yCmp * factor,
+        vector._zCmp * factor);
+}
 
-    Math::Vector3D scale(const Math::Vector3D &vector, double factor)
-    {
-        return Math::Vector3D(vector._xCmp * factor,
-            vector._yCmp * factor,
-            vector._zCmp * factor);
-    }
+Math::Vector3D subtract(const Math::Vector3D &lhs, const Math::Vector3D &rhs)
+{
+    return Math::Vector3D(lhs._xCmp - rhs._xCmp,
+        lhs._yCmp - rhs._yCmp,
+        lhs._zCmp - rhs._zCmp);
+}
 
-    Math::Vector3D subtract(const Math::Vector3D &lhs, const Math::Vector3D &rhs)
-    {
-        return Math::Vector3D(lhs._xCmp - rhs._xCmp,
-            lhs._yCmp - rhs._yCmp,
-            lhs._zCmp - rhs._zCmp);
-    }
+Math::Point3D offsetPoint(const Math::Point3D &point,
+    const Math::Vector3D &direction, double scalar)
+{
+    return Math::Point3D(point._xCmp + direction._xCmp * scalar,
+        point._yCmp + direction._yCmp * scalar,
+        point._zCmp + direction._zCmp * scalar);
+}
 
-    Math::Point3D offsetPoint(const Math::Point3D &point,
-        const Math::Vector3D &direction, double scalar)
-    {
-        return Math::Point3D(point._xCmp + direction._xCmp * scalar,
-            point._yCmp + direction._yCmp * scalar,
-            point._zCmp + direction._zCmp * scalar);
-    }
+Math::Point3D computePointAlongRay(const RayTracer::Ray &ray, double distance)
+{
+    return offsetPoint(ray._origin, ray._direction, distance);
+}
 
-    Math::Point3D computePointAlongRay(const RayTracer::Ray &ray, double distance)
-    {
-        return offsetPoint(ray._origin, ray._direction, distance);
-    }
+Math::Vector3D projectPerpendicular(const Math::Vector3D &vector,
+    const Math::Vector3D &axis)
+{
+    return subtract(vector, scale(axis, vector.dot(axis)));
+}
 
-    Math::Vector3D projectPerpendicular(const Math::Vector3D &vector,
-        const Math::Vector3D &axis)
-    {
-        return subtract(vector, scale(axis, vector.dot(axis)));
-    }
+void normalizeInPlace(Math::Vector3D &vector)
+{
+    const double length = vector.length();
 
-    void normalizeInPlace(Math::Vector3D &vector)
-    {
-        const double length = vector.length();
+    if (length <= 0)
+        return;
+    vector._xCmp /= length;
+    vector._yCmp /= length;
+    vector._zCmp /= length;
+}
 
-        if (length <= 0)
-            return;
-        vector._xCmp /= length;
-        vector._yCmp /= length;
-        vector._zCmp /= length;
-    }
-
-    std::optional<double> findNearestPositiveRoot(double coefA, double coefB,
-        double coefC)
-    {
-        if (std::abs(coefA) < EPSILON)
-            return std::nullopt;
-        const double discriminant = discriminantEquation(coefB, coefA, coefC);
-        if (discriminant < 0)
-            return std::nullopt;
-
-        const double sqrtDiscriminant = std::sqrt(discriminant);
-        const double firstRoot = (-coefB - sqrtDiscriminant) / (2.0 * coefA);
-        const double secondRoot = (-coefB + sqrtDiscriminant) / (2.0 * coefA);
-
-        if (firstRoot > 0)
-            return firstRoot;
-        if (secondRoot > 0)
-            return secondRoot;
+std::optional<double> findNearestPositiveRoot(double coefA, double coefB,
+    double coefC)
+{
+    if (std::abs(coefA) < EPSILON)
         return std::nullopt;
-    }
+    const double discriminant = discriminantEquation(coefB, coefA, coefC);
+    if (discriminant < 0)
+        return std::nullopt;
 
-    void considerHit(std::optional<hitRecord> &best,
-        const std::optional<hitRecord> &candidate)
-    {
-        if (candidate && (!best || candidate->t < best->t))
-            best = candidate;
-    }
+    const double sqrtDiscriminant = std::sqrt(discriminant);
+    const double firstRoot = (-coefB - sqrtDiscriminant) / (2.0 * coefA);
+    const double secondRoot = (-coefB + sqrtDiscriminant) / (2.0 * coefA);
 
-    double degreesToRadians(double angleDegrees)
-    {
-        return angleDegrees * std::numbers::pi / 180.0;
-    }
+    if (firstRoot > 0)
+        return firstRoot;
+    if (secondRoot > 0)
+        return secondRoot;
+    return std::nullopt;
+}
 
-    Math::Vector3D rotateAroundX(const Math::Vector3D &vector, double angleRad)
-    {
-        const double cosA = std::cos(angleRad);
-        const double sinA = std::sin(angleRad);
+void considerHit(std::optional<hitRecord> &best,
+    const std::optional<hitRecord> &candidate)
+{
+    if (candidate && (!best || candidate->t < best->t))
+        best = candidate;
+}
 
-        return Math::Vector3D(vector._xCmp,
-            vector._yCmp * cosA - vector._zCmp * sinA,
-            vector._yCmp * sinA + vector._zCmp * cosA);
-    }
+double degreesToRadians(double angleDegrees)
+{
+    return angleDegrees * PI / 180.0;
+}
 
-    Math::Vector3D rotateAroundY(const Math::Vector3D &vector, double angleRad)
-    {
-        const double cosA = std::cos(angleRad);
-        const double sinA = std::sin(angleRad);
+Math::Vector3D rotateAroundX(const Math::Vector3D &vector, double angleRad)
+{
+    const double cosA = std::cos(angleRad);
+    const double sinA = std::sin(angleRad);
 
-        return Math::Vector3D(vector._xCmp * cosA + vector._zCmp * sinA,
-            vector._yCmp,
-            -vector._xCmp * sinA + vector._zCmp * cosA);
-    }
+    return Math::Vector3D(vector._xCmp,
+        vector._yCmp * cosA - vector._zCmp * sinA,
+        vector._yCmp * sinA + vector._zCmp * cosA);
+}
 
-    Math::Vector3D rotateAroundZ(const Math::Vector3D &vector, double angleRad)
-    {
-        const double cosA = std::cos(angleRad);
-        const double sinA = std::sin(angleRad);
+Math::Vector3D rotateAroundY(const Math::Vector3D &vector, double angleRad)
+{
+    const double cosA = std::cos(angleRad);
+    const double sinA = std::sin(angleRad);
 
-        return Math::Vector3D(vector._xCmp * cosA - vector._yCmp * sinA,
-            vector._xCmp * sinA + vector._yCmp * cosA,
-            vector._zCmp);
-    }
+    return Math::Vector3D(vector._xCmp * cosA + vector._zCmp * sinA,
+        vector._yCmp,
+        -vector._xCmp * sinA + vector._zCmp * cosA);
+}
+
+Math::Vector3D rotateAroundZ(const Math::Vector3D &vector, double angleRad)
+{
+    const double cosA = std::cos(angleRad);
+    const double sinA = std::sin(angleRad);
+
+    return Math::Vector3D(vector._xCmp * cosA - vector._yCmp * sinA,
+        vector._xCmp * sinA + vector._yCmp * cosA,
+        vector._zCmp);
 }
 
 RayTracer::Cylinder::Cylinder(const Math::Point3D &center, double radius,

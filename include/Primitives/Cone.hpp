@@ -15,7 +15,8 @@
 #include <optional>
 
 namespace RayTracer {
-    class Cone : public Interfaces::IHittable, public Interfaces::ITransformable {
+    class Cone : public Interfaces::IHittable,
+                public Interfaces::ITransformable {
     public:
         Cone(const Math::Point3D &apex, double height, double baseRadius,
             std::unique_ptr<Interfaces::IMaterial> material = nullptr);

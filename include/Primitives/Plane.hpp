@@ -15,9 +15,9 @@
 #include <memory>
 #include <optional>
 
-
 namespace RayTracer {
-    class Plane : public Interfaces::IHittable, public Interfaces::ITransformable {
+    class Plane : public Interfaces::IHittable,
+                    public Interfaces::ITransformable {
     public:
         Plane(const Math::Point3D &position, const Math::Vector3D &normal,
             std::unique_ptr<Interfaces::IMaterial> material = nullptr);

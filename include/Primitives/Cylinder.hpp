@@ -16,7 +16,8 @@
 
 
 namespace RayTracer {
-    class Cylinder : public Interfaces::IHittable, public Interfaces::ITransformable {
+    class Cylinder : public Interfaces::IHittable,
+                    public Interfaces::ITransformable {
     public:
         Cylinder(const Math::Point3D &center, double radius, double height,
             std::unique_ptr<Interfaces::IMaterial> material = nullptr);

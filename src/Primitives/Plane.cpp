@@ -5,16 +5,13 @@
 ** Plane
 */
 
-#include "Plane.hpp"
-#include "Vector3D.hpp"
 #include <cmath>
-#include <numbers>
 #include <optional>
 #include <utility>
+#include "Plane.hpp"
+#include "Vector3D.hpp"
 
 namespace {
-    constexpr double EPSILON = 1e-6;
-
     Math::Vector3D computeVectorBetween(const Math::Point3D &from,
         const Math::Point3D &to)
     {
@@ -39,7 +36,7 @@ namespace {
 
     std::pair<double, double> computeAngleTrig(double angleDegrees)
     {
-        const double angleRad = angleDegrees * std::numbers::pi / 180.0;
+        const double angleRad = angleDegrees * PI / 180.0;
         return {std::cos(angleRad), std::sin(angleRad)};
     }
 
