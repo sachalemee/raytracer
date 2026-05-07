@@ -71,6 +71,42 @@ void SceneBuilder::parseLights(RayTracer::Scene &scene, const libconfig::Setting
     parseDirectionalLights(scene, lightsSetting);
 }
 
+static void parsePrimitives(RayTracer::Scene &scene, const libconfig::Setting &primitives)
+{
+    if (primitives.exists("spheres")) {
+        const libconfig::Setting &spheres = primitives["spheres"];
+        for (int i = 0; i < spheres.getLength(); i++) {
+            try {
+                scene.add(PrimitiveFactory::createSphere(spheres[i]));
+            } catch (...) {}
+        }
+    }
+    if (primitives.exists("planes")) {
+        const libconfig::Setting &planes = primitives["planes"];
+        for (int i = 0; i < planes.getLength(); i++) {
+            try {
+                scene.add(PrimitiveFactory::createPlane(planes[i]));
+            } catch (...) {}
+        }
+    }
+    if (primitives.exists("cylinders")) {
+        const libconfig::Setting &cylinders = primitives["cylinders"];
+        for (int i = 0; i < cylinders.getLength(); i++) {
+            try {
+                scene.add(PrimitiveFactory::createCylinder(cylinders[i]));
+            } catch (...) {}
+        }
+    }
+    if (primitives.exists("cones")) {
+        const libconfig::Setting &cones = primitives["cones"];
+        for (int i = 0; i < cones.getLength(); i++) {
+            try {
+                scene.add(PrimitiveFactory::createCone(cones[i]));
+            } catch (...) {}
+        }
+    }
+}
+
 RayTracer::Scene SceneBuilder::build(const std::string &configFile)
 {
     RayTracer::Scene scene;
@@ -79,54 +115,13 @@ RayTracer::Scene SceneBuilder::build(const std::string &configFile)
     cfg.readFile(configFile.c_str());
 
     try {
-        const libconfig::Setting &cameraSetting = cfg.lookup("camera");
-        scene.setCamera(parseCamera(cameraSetting));
+        scene.setCamera(parseCamera(cfg.lookup("camera")));
     } catch (...) {}
-
     try {
-        const libconfig::Setting &primitives = cfg.lookup("primitives");
-
-        if (primitives.exists("spheres")) {
-            const libconfig::Setting &spheres = primitives["spheres"];
-            for (int i = 0; i < spheres.getLength(); i++) {
-                try {
-                    scene.add(PrimitiveFactory::createSphere(spheres[i]));
-                } catch (...) {}
-            }
-        }
-
-        if (primitives.exists("planes")) {
-            const libconfig::Setting &planes = primitives["planes"];
-            for (int i = 0; i < planes.getLength(); i++) {
-                try {
-                    scene.add(PrimitiveFactory::createPlane(planes[i]));
-                } catch (...) {}
-            }
-        }
-
-        if (primitives.exists("cylinders")) {
-            const libconfig::Setting &cylinders = primitives["cylinders"];
-            for (int i = 0; i < cylinders.getLength(); i++) {
-                try {
-                    scene.add(PrimitiveFactory::createCylinder(cylinders[i]));
-                } catch (...) {}
-            }
-        }
-
-        if (primitives.exists("cones")) {
-            const libconfig::Setting &cones = primitives["cones"];
-            for (int i = 0; i < cones.getLength(); i++) {
-                try {
-                    scene.add(PrimitiveFactory::createCone(cones[i]));
-                } catch (...) {}
-            }
-        }
+        parsePrimitives(scene, cfg.lookup("primitives"));
     } catch (...) {}
-
     try {
-        const libconfig::Setting &lights = cfg.lookup("lights");
-        parseLights(scene, lights);
+        parseLights(scene, cfg.lookup("lights"));
     } catch (...) {}
-
     return scene;
 }
