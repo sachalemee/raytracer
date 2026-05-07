@@ -19,6 +19,7 @@ class SceneBuilder {
     public:
         static RayTracer::Scene build(const std::string &configFile);
         static RayTracer::Camera parseCamera(const libconfig::Setting &cameraSetting);
+        static void parseLights(RayTracer::Scene &scene, const libconfig::Setting &lightsSetting);
 
     private:
         SceneBuilder() = delete;
