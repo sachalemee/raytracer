@@ -7,7 +7,11 @@
 
 #include "PrimitiveFactory.hpp"
 #include "Sphere.hpp"
+#include "Plane.hpp"
+#include "Cylinder.hpp"
+#include "Cone.hpp"
 #include "Point3D.hpp"
+#include "Vector3D.hpp"
 #include <libconfig.h++>
 #include <memory>
 
@@ -23,18 +27,42 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createSphere
 
 std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createPlane(const libconfig::Setting &setting)
 {
-    (void)setting;
-    return nullptr;
+    std::string axis = setting["axis"].c_str();
+    double position = setting["position"];
+    Math::Vector3D normal(0, 0, 0);
+    Math::Point3D pos(0, 0, 0);
+
+    if (axis == "X") {
+        normal = Math::Vector3D(1, 0, 0);
+        pos = Math::Point3D(position, 0, 0);
+    } else if (axis == "Y") {
+        normal = Math::Vector3D(0, 1, 0);
+        pos = Math::Point3D(0, position, 0);
+    } else {
+        normal = Math::Vector3D(0, 0, 1);
+        pos = Math::Point3D(0, 0, position);
+    }
+    return std::make_unique<RayTracer::Plane>(pos, normal);
 }
 
 std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCylinder(const libconfig::Setting &setting)
 {
-    (void)setting;
-    return nullptr;
+    double x = setting["x"];
+    double y = setting["y"];
+    double z = setting["z"];
+    double radius = setting["r"];
+    double height = setting["height"];
+
+    return std::make_unique<RayTracer::Cylinder>(Math::Point3D(x, y, z), radius, height);
 }
 
 std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCone(const libconfig::Setting &setting)
 {
-    (void)setting;
-    return nullptr;
+    double x = setting["x"];
+    double y = setting["y"];
+    double z = setting["z"];
+    double height = setting["height"];
+    double radius = setting["r"];
+
+    return std::make_unique<RayTracer::Cone>(Math::Point3D(x, y, z), height, radius);
 }
