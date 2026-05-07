@@ -16,3 +16,8 @@ RayTracer::Ray::Ray() : _origin(), _direction()
 RayTracer::Ray::Ray(const Math::Point3D &origin, const Math::Vector3D &direction) : _origin(origin), _direction(direction)
 {
 }
+
+Math::Point3D RayTracer::Ray::at(double t) const
+{
+    return _origin + _direction * t;
+}

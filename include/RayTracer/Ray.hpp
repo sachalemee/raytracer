@@ -18,6 +18,8 @@ namespace RayTracer {
             Ray(const Math::Point3D &origin, const Math::Vector3D &direction);
             ~Ray() = default;
 
+            Math::Point3D at(double t) const;
+
             Math::Point3D _origin;
             Math::Vector3D _direction;
         

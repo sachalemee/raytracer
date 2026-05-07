@@ -40,3 +40,4 @@ const std::vector<std::unique_ptr<RayTracer::Interfaces::ILight>> &RayTracer::Sc
 {
     return _lights;
 }
+
