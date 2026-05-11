@@ -39,16 +39,14 @@ std::string RayTracer::Renderer::renderToString()
     return output.str();
 }
 
-void RayTracer::Renderer::writeHeader(std::ostream &out,
-    const Camera &camera)
+void RayTracer::Renderer::writeHeader(std::ostream &out, const Camera &camera)
 {
     out << "P3\n";
     out << camera._width << " " << camera._height << "\n";
     out << "255\n";
 }
 
-void RayTracer::Renderer::renderPixels(std::ostream &out,
-    const Camera &camera)
+void RayTracer::Renderer::renderPixels(std::ostream &out, const Camera &camera)
 {
     int height = camera._height;
 
@@ -68,35 +66,24 @@ void RayTracer::Renderer::renderRow(std::ostream &out,
     }
 }
 
-void RayTracer::Renderer::renderPixel(std::ostream &out,
-    const Camera &camera,
-    int x,
-    int y)
+void RayTracer::Renderer::renderPixel(std::ostream &out, const Camera &camera, int x, int y)
 {
     double u = static_cast<double>(x) / camera._width;
-    double v = static_cast<double>(y) / camera._height;
-
+    double v = 1.0 - (static_cast<double>(y) / camera._height);
     Ray ray = camera.ray(u, v);
-
     std::optional<hitRecord> closestHit = findClosestHit(ray);
-
     Math::Vector3D pixelColor = computePixelColor(closestHit);
-
     writeColor(out, pixelColor);
 }
 
 std::optional<hitRecord> RayTracer::Renderer::findClosestHit(
     const Ray &ray)
 {
-    const std::vector<std::unique_ptr<Interfaces::IHittable>>
-        &primitives = _scene.getPrimitives();
-
+    const std::vector<std::unique_ptr<Interfaces::IHittable>>&primitives = _scene.getPrimitives();
     std::optional<hitRecord> closestHit;
     double closestDistance = 1e100;
-
     for (const auto &primitive : primitives) {
         std::optional<hitRecord> hit = primitive->hits(ray);
-
         if (hit && hit->t < closestDistance) {
             closestDistance = hit->t;
             closestHit = hit;
@@ -109,17 +96,12 @@ std::optional<hitRecord> RayTracer::Renderer::findClosestHit(
 Math::Vector3D RayTracer::Renderer::computePixelColor(
     const std::optional<hitRecord> &closestHit)
 {
-    const std::vector<std::unique_ptr<Interfaces::ILight>>
-        &lights = _scene.getLights();
-
-    const std::vector<std::unique_ptr<Interfaces::IHittable>>
-        &primitives = _scene.getPrimitives();
+    const std::vector<std::unique_ptr<Interfaces::ILight>>&lights = _scene.getLights();
+    const std::vector<std::unique_ptr<Interfaces::IHittable>>&primitives = _scene.getPrimitives();
 
     Math::Vector3D backgroundColor(0, 0, 0);
-
     if (!closestHit)
         return backgroundColor;
-
     return LightCalculator::compute(*closestHit, lights, primitives);
 }
 
@@ -137,9 +119,7 @@ int RayTracer::Renderer::clamp(double value)
 {
     if (value < 0.0)
         return 0;
-
     if (value > 255.0)
         return 255;
-
     return static_cast<int>(value);
 }
