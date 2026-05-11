@@ -20,6 +20,7 @@ include_directories(
     include/Factory
     include/Interfaces
     include/Lights
+    include/Materials
     include/Math
     include/Primitives
     include/RayTracer
