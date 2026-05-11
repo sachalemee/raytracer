@@ -22,6 +22,8 @@ namespace RayTracer {
 
             Math::Point3D _origin;
             Rectangle3D _screen;
+            int _width;
+            int _height;
 
         protected:
         private:

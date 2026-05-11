@@ -29,10 +29,18 @@ RayTracer::Camera SceneBuilder::parseCamera(const libconfig::Setting &cameraSett
     const libconfig::Setting &resolution = cameraSetting["resolution"];
     int width = resolution["width"];
     int height = resolution["height"];
-    // Configure screen based on resolution
-    camera._screen._origin = Math::Point3D(posX, posY, posZ - 1.0);
-    camera._screen._bottomSide = Math::Vector3D(width, 0, 0);
-    camera._screen._leftSide = Math::Vector3D(0, height, 0);
+    camera._width = width;
+    camera._height = height;
+    // FOV-based screen setup — camera looks in +y, up is +z, right is +x
+    double fov = 72.0;
+    if (cameraSetting.exists("fieldOfView"))
+        fov = cameraSetting["fieldOfView"];
+    double halfAngle = fov / 2.0 * M_PI / 180.0;
+    double halfH = std::tan(halfAngle);
+    double halfW = halfH * ((double)width / height);
+    camera._screen._origin = Math::Point3D(posX - halfW, posY + 1.0, posZ - halfH);
+    camera._screen._bottomSide = Math::Vector3D(2.0 * halfW, 0, 0);
+    camera._screen._leftSide = Math::Vector3D(0, 0, 2.0 * halfH);
     return camera;
 }
 
@@ -112,6 +120,7 @@ RayTracer::Scene SceneBuilder::build(const std::string &configFile)
     RayTracer::Scene scene;
     libconfig::Config cfg;
 
+    cfg.setAutoConvert(true);
     cfg.readFile(configFile.c_str());
 
     try {
