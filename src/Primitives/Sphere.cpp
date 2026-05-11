@@ -34,18 +34,7 @@ void RayTracer::Sphere::translate(const Math::Vector3D &offset)
     _sphCenter += offset;
 }
 
-void RayTracer::Sphere::rotateX(double angleDegrees)#include "FlatColor.hpp"
-
-RayTracer::FlatColor::FlatColor(const Math::Vector3D &color)
-    : _color(color)
-{
-}
-
-Math::Vector3D RayTracer::FlatColor::getColor() const
-{
-    return _color;
-}
-
+void RayTracer::Sphere::rotateX(double angleDegrees)
 {
     const auto [cosA, sinA] = computeAngleTrig(angleDegrees);
 
