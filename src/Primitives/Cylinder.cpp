@@ -29,6 +29,8 @@ std::optional<hitRecord> RayTracer::Cylinder::hits(const RayTracer::Ray &ray) co
     considerHit(best, _intersectBody(ray));
     considerHit(best, _intersectCap(ray, topCenter, _axis));
     considerHit(best, _intersectCap(ray, bottomCenter, reversedAxis));
+    if (best && _material)
+        best->color = _material->getColor();
     return best;
 }
 
