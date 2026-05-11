@@ -15,11 +15,12 @@ else() # Pour Linux
 endif()
 
 include_directories(
-    include 
+    include
     include/Exceptions
     include/Factory
     include/Interfaces
     include/Lights
+    include/Materials
     include/Math
     include/Primitives
     include/RayTracer
