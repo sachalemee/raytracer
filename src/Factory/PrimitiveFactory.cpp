@@ -10,10 +10,20 @@
 #include "Plane.hpp"
 #include "Cylinder.hpp"
 #include "Cone.hpp"
+#include "FlatColor.hpp"
 #include "Point3D.hpp"
 #include "Vector3D.hpp"
 #include <libconfig.h++>
 #include <memory>
+
+static std::unique_ptr<RayTracer::FlatColor> parseColor(const libconfig::Setting &setting)
+{
+    int r = setting["r"];
+    int g = setting["g"];
+    int b = setting["b"];
+    return std::make_unique<RayTracer::FlatColor>(
+        Math::Vector3D(r / 255.0, g / 255.0, b / 255.0));
+}
 
 std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createSphere(const libconfig::Setting &setting)
 {
@@ -21,8 +31,11 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createSphere
     double y = setting["y"];
     double z = setting["z"];
     double radius = setting["r"];
-    
-    return std::make_unique<RayTracer::Sphere>(Math::Point3D(x, y, z), radius);
+    std::unique_ptr<RayTracer::FlatColor> material;
+
+    if (setting.exists("color"))
+        material = parseColor(setting["color"]);
+    return std::make_unique<RayTracer::Sphere>(Math::Point3D(x, y, z), radius, std::move(material));
 }
 
 std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createPlane(const libconfig::Setting &setting)
@@ -42,7 +55,10 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createPlane(
         normal = Math::Vector3D(0, 0, 1);
         pos = Math::Point3D(0, 0, position);
     }
-    return std::make_unique<RayTracer::Plane>(pos, normal);
+    std::unique_ptr<RayTracer::FlatColor> material;
+    if (setting.exists("color"))
+        material = parseColor(setting["color"]);
+    return std::make_unique<RayTracer::Plane>(pos, normal, std::move(material));
 }
 
 std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCylinder(const libconfig::Setting &setting)
@@ -52,8 +68,11 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCylind
     double z = setting["z"];
     double radius = setting["r"];
     double height = setting["height"];
+    std::unique_ptr<RayTracer::FlatColor> material;
 
-    return std::make_unique<RayTracer::Cylinder>(Math::Point3D(x, y, z), radius, height);
+    if (setting.exists("color"))
+        material = parseColor(setting["color"]);
+    return std::make_unique<RayTracer::Cylinder>(Math::Point3D(x, y, z), radius, height, std::move(material));
 }
 
 std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCone(const libconfig::Setting &setting)
@@ -63,6 +82,9 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCone(c
     double z = setting["z"];
     double height = setting["height"];
     double radius = setting["r"];
+    std::unique_ptr<RayTracer::FlatColor> material;
 
-    return std::make_unique<RayTracer::Cone>(Math::Point3D(x, y, z), height, radius);
+    if (setting.exists("color"))
+        material = parseColor(setting["color"]);
+    return std::make_unique<RayTracer::Cone>(Math::Point3D(x, y, z), height, radius, std::move(material));
 }

@@ -10,8 +10,9 @@
 #include "Sphere.hpp"
 #include "PrimitiveUtils.hpp"
 
-RayTracer::Sphere::Sphere(const Math::Point3D &center, double radius)
-    : _sphCenter(center), _sphRadius(radius)
+RayTracer::Sphere::Sphere(const Math::Point3D &center, double radius,
+    std::unique_ptr<Interfaces::IMaterial> material)
+    : _sphCenter(center), _sphRadius(radius), _material(std::move(material))
 {
 }
 
@@ -26,7 +27,10 @@ std::optional<hitRecord> RayTracer::Sphere::hits(const RayTracer::Ray &ray) cons
 
     if (!distance)
         return std::nullopt;
-    return buildSpherehitRecord(ray, *distance, _sphCenter);
+    auto record = buildSpherehitRecord(ray, *distance, _sphCenter);
+    if (_material)
+        record.color = _material->getColor();
+    return record;
 }
 
 void RayTracer::Sphere::translate(const Math::Vector3D &offset)
