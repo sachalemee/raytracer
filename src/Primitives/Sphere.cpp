@@ -10,8 +10,8 @@
 #include "Sphere.hpp"
 #include "PrimitiveUtils.hpp"
 
-RayTracer::Sphere::Sphere(const Math::Point3D &center, double radius)
-    : _sphCenter(center), _sphRadius(radius)
+RayTracer::Sphere::Sphere(const Math::Point3D &center, double radius, std::unique_ptr<Interfaces::IMaterial> material)
+    : _sphCenter(center), _sphRadius(radius), _material(std::move(material))
 {
 }
 
@@ -34,7 +34,18 @@ void RayTracer::Sphere::translate(const Math::Vector3D &offset)
     _sphCenter += offset;
 }
 
-void RayTracer::Sphere::rotateX(double angleDegrees)
+void RayTracer::Sphere::rotateX(double angleDegrees)#include "FlatColor.hpp"
+
+RayTracer::FlatColor::FlatColor(const Math::Vector3D &color)
+    : _color(color)
+{
+}
+
+Math::Vector3D RayTracer::FlatColor::getColor() const
+{
+    return _color;
+}
+
 {
     const auto [cosA, sinA] = computeAngleTrig(angleDegrees);
 
