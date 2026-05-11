@@ -53,6 +53,8 @@ cmake --build build
 ./raytracer <SCENE_FILE>
 ```
 
+![RAYTRACER Raytracing image](screenshots/room_spheres.png)
+
 ## Documentation
 
 See [RAYTRACER Documentation](doc/DOCUMENTATION.md)
