@@ -13,17 +13,42 @@
 #include "FlatColor.hpp"
 #include "Point3D.hpp"
 #include "Vector3D.hpp"
+#include "Colors.hpp"
 #include <libconfig.h++>
 #include <memory>
+#include <cctype>
+#include <algorithm>
+
+static std::string toLower(const std::string &str)
+{
+    std::string result = str;
+ 
+    std::transform(result.begin(), result.end(), result.begin(),
+        [](unsigned char c) { return std::tolower(c); });
+    return result;
+}
 
 static std::unique_ptr<RayTracer::FlatColor> parseColor(const libconfig::Setting &setting)
 {
-    int r = setting["r"];
-    int g = setting["g"];
-    int b = setting["b"];
-    return std::make_unique<RayTracer::FlatColor>(
-        Math::Vector3D(r / 255.0, g / 255.0, b / 255.0));
+    Math::Vector3D color;
+
+    if (setting.getType() == libconfig::Setting::TypeString) {
+        std::string colorName = toLower(setting.c_str());
+        color = RayTracer::Colors::getColorByName(colorName);
+    }
+    else if (setting.getType() == libconfig::Setting::TypeGroup) {
+        int r = setting["r"];
+        int g = setting["g"];
+        int b = setting["b"];
+        color = Math::Vector3D(r / 255.0, g / 255.0, b / 255.0);
+    }
+    else {
+        color = RayTracer::Colors::WHITE;
+    }
+
+    return std::make_unique<RayTracer::FlatColor>(color);
 }
+
 
 std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createSphere(const libconfig::Setting &setting)
 {

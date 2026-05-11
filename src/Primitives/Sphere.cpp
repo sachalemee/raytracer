@@ -10,8 +10,7 @@
 #include "Sphere.hpp"
 #include "PrimitiveUtils.hpp"
 
-RayTracer::Sphere::Sphere(const Math::Point3D &center, double radius,
-    std::unique_ptr<Interfaces::IMaterial> material)
+RayTracer::Sphere::Sphere(const Math::Point3D &center, double radius, std::unique_ptr<Interfaces::IMaterial> material)
     : _sphCenter(center), _sphRadius(radius), _material(std::move(material))
 {
 }

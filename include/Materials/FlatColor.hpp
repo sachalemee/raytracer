@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2026
-** raytracer
+** G-OOP-400-PAR-4-1-raytracer-29
 ** File description:
 ** FlatColor
 */
