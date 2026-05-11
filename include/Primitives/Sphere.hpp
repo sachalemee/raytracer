@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2026
-** raytracer
+** G-OOP-400-PAR-4-1-raytracer-29
 ** File description:
 ** Sphere
 */
@@ -19,7 +19,7 @@ namespace RayTracer {
     class Sphere : public Interfaces::IHittable,
                     public Interfaces::ITransformable {
     public:
-        Sphere(const Math::Point3D &center, double radius /*, std::unique_ptr<Interfaces::IMaterial> material*/);
+        Sphere(const Math::Point3D &center, double radius, std::unique_ptr<Interfaces::IMaterial> material = nullptr);
         ~Sphere() = default;
         std::optional<hitRecord> hits(const RayTracer::Ray &ray) const override;
         void translate(const Math::Vector3D &offset) override;
