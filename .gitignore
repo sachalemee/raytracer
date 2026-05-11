@@ -1,4 +1,5 @@
 *.o
+*.ppm
 build/
 CMakeFiles/
 cmake_install.cmake
