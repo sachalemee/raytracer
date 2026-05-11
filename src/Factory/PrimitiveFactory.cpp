@@ -49,6 +49,15 @@ static std::unique_ptr<RayTracer::FlatColor> parseColor(const libconfig::Setting
     return std::make_unique<RayTracer::FlatColor>(color);
 }
 
+static std::unique_ptr<RayTracer::FlatColor> parseColor(const libconfig::Setting &setting)
+{
+    int r = setting["r"];
+    int g = setting["g"];
+    int b = setting["b"];
+    return std::make_unique<RayTracer::FlatColor>(
+        Math::Vector3D(r / 255.0, g / 255.0, b / 255.0));
+}
+
 std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createSphere(const libconfig::Setting &setting)
 {
     double x = setting["x"];

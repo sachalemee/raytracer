@@ -15,7 +15,7 @@ else() # Pour Linux
 endif()
 
 include_directories(
-    include 
+    include
     include/Exceptions
     include/Factory
     include/Interfaces

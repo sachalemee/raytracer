@@ -47,6 +47,8 @@ std::optional<hitRecord> RayTracer::Plane::hits(const RayTracer::Ray &ray) const
     record.t = distance;
     record.frontFace = denominator < 0;
     record.normal = record.frontFace ? _normal : negateVector(_normal);
+    if (_material)
+        record.color = _material->getColor();
     return record;
 }
 
