@@ -13,7 +13,7 @@
 
 RayTracer::Cylinder::Cylinder(const Math::Point3D &center, double radius,
     double height, std::unique_ptr<Interfaces::IMaterial> material)
-    : _center(center), _axis(0, 1, 0), _radius(radius), _height(height),
+    : _center(center), _axis(0, 0, 1), _radius(radius), _height(height),
     _material(std::move(material))
 {
 }
