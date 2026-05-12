@@ -11,6 +11,33 @@ By *Marin Jeunot*(marin.jeunot@epitech.eu), *Evans Ramin*(evans.ramin@epitech.eu
 - "*Ray tracing is a technique used to generate realistic digital images by simulating the inverse path of light. Your goal is to create a program able to generate an image from a file describing the scene*"
 [RAYTRACER EPITECH Subject](doc/G-OOP-400_raytracer.pdf)
 
+## Features
+
+- Modular architecture
+- Scene parsing from `.cfg`
+- Ray tracing renderer
+
+## Design Patterns
+
+- Builder pattern
+- Factory pattern
+
+## Supported Primitives
+
+- Sphere
+- Plane
+- Cylinder
+- Cone
+
+## Lighting System
+
+- Ambient light
+- Directional light
+
+## Materials
+
+- Flat color
+
 ## Getting Started
 
 ### Prerequisites
