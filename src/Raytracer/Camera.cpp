@@ -10,7 +10,7 @@
 #include "Ray.hpp"
 #include "Vector3D.hpp"
 
-RayTracer::Camera::Camera() : _origin(0, 0, 0)
+RayTracer::Camera::Camera() : _origin(0, 0, 0), _width(800), _height(600)
 {
 }
 

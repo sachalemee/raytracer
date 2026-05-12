@@ -8,3 +8,4 @@
 -I./include/Primitives
 -I./include/RayTracer
 -I./include/Templates
+-I./include/Materials

@@ -6,9 +6,11 @@
 */
 
 #include <iostream>
+#include <filesystem>
 #include "RayTracer.hpp"
 #include "SceneBuilder.hpp"
 #include "Exception.hpp"
+#include "Renderer.hpp"
 #include <libconfig.h++>
 
 int main(int ac, char **av)
@@ -17,8 +19,12 @@ int main(int ac, char **av)
         if (error_handling(ac, av) != IS_EXIT_SUCCESS)
             return IS_EXIT_FAILURE;
         RayTracer::Scene scene = SceneBuilder::build(av[1]);
-        // TODO: Use here the scene to render image
-        std::cout << "Scene parsed successfully!\n";
+        std::filesystem::path inputPath(av[1]);
+        std::filesystem::path outputPath = "screenshots/" + inputPath.stem().string();
+        outputPath.replace_extension(".ppm");
+        RayTracer::Renderer renderer(scene);
+        renderer.render(outputPath.string());
+        std::cout << "Raytraced image saved to: " << outputPath.string() << std::endl;
     } catch (const RayTracer::Exceptions::fileNotFound &e) {
         std::cerr << e.what() << std::endl;
         return IS_EXIT_FAILURE;
