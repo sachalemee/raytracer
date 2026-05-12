@@ -1,6 +1,6 @@
 # RAYTRACER
 
-![RAYTRACER Storefront Image](doc/Minecraft-vs-RealLife.png)
+![RAYTRACER Storefront Image](screenshots/room_all_primitives.png)
 
 ### Development
 
@@ -17,24 +17,24 @@ By *Marin Jeunot*(marin.jeunot@epitech.eu), *Evans Ramin*(evans.ramin@epitech.eu
 - Scene parsing from `.cfg`
 - Ray tracing renderer
 
-## Design Patterns
+### Design Patterns
 
 - Builder pattern
 - Factory pattern
 
-## Supported Primitives
+### Supported Primitives
 
 - Sphere
 - Plane
 - Cylinder
 - Cone
 
-## Lighting System
+### Lighting System
 
 - Ambient light
 - Directional light
 
-## Materials
+### Materials
 
 - Flat color
 
@@ -68,26 +68,30 @@ git clone git@github.com:EpitechPGE2-2025/G-OOP-400-PAR-4-1-raytracer-29.git
 cd G-OOP-400-PAR-4-1-raytracer-29.git
 ```
 
-3. **install dependencies:**
+3. **Build the project:**
 
-```sh
-sudo apt-get install libsfml-dev
-```
-
-Want to learn more ? Check out the [SFML Documentation](https://www.sfml-dev.org/) !
-
-4. **lauch project:**
 ```sh
 cmake -S . -B build
 cmake --build build
+```
+
+4. **Run the raytracer:**
+
+```sh
 ./raytracer <SCENE_FILE>
 ```
 
-![RAYTRACER Raytracing image](screenshots/room_spheres_v1.png)
+Example:
+```sh
+./raytracer scenes/room_spheres_v1.cfg
+```
+
+![RAYTRACER Render example](screenshots/room_spheres_v1.png)
 
 ## Documentation
 
-See [RAYTRACER Documentation](doc/DOCUMENTATION.md)
+See the full documentation here :
+-> [RAYTRACER Documentation](doc/DOCUMENTATION.md)
 
 ## License
 
