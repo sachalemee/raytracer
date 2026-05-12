@@ -13,7 +13,7 @@
 
 RayTracer::Cone::Cone(const Math::Point3D &apex, double height, double baseRadius,
     std::unique_ptr<Interfaces::IMaterial> material)
-    : _apex(apex), _axis(0, 1, 0), _height(height), _baseRadius(baseRadius),
+    : _apex(apex), _axis(0, 0, 1), _height(height), _baseRadius(baseRadius),
     _material(std::move(material))
 {
 }
@@ -78,7 +78,7 @@ std::optional<hitRecord> RayTracer::Cone::_intersectBase(
     const RayTracer::Ray &ray) const
 {
     const auto baseCenter = offsetPoint(_apex, _axis, -_height);
-    const auto baseNormal = scale(_axis, -1.0);
+    const auto baseNormal = _axis;
     const double denominator = ray._direction.dot(baseNormal);
 
     if (std::abs(denominator) < EPSILON)
