@@ -42,9 +42,12 @@ By *Marin Jeunot*(marin.jeunot@epitech.eu), *Evans Ramin*(evans.ramin@epitech.eu
 
 ### Prerequisites
 
-This project requires the following dependencies:
+This project requires:
+- C++20
+- CMake 3.20+
+- clang++ 20.1.8
 
-- **Programming Language:** C++
+*No external graphics library is required.*
 
 ## Requirements
 
