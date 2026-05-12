@@ -88,10 +88,14 @@ Example:
 
 ![RAYTRACER Render example](screenshots/room_spheres_v1.png)
 
+## Repository Architecture
+
+See the complete repository architecture here: [RAYTRACER Project structure](doc/PROJECT_STRUCTURE.md)
+
+
 ## Documentation
 
-See the full documentation here :
--> [RAYTRACER Documentation](doc/DOCUMENTATION.md)
+See the full documentation here : [RAYTRACER Documentation](doc/DOCUMENTATION.md)
 
 ## License
 
