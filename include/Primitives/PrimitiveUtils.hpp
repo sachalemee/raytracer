@@ -11,11 +11,13 @@
 #include <optional>
 #include <utility>
 #include <cmath>
+#include <memory>
 #include "Point3D.hpp"
 #include "RayTracer.hpp"
 #include "Vector3D.hpp"
 #include "Ray.hpp"
 #include "Template.hpp"
+#include "IMaterial.hpp"
 
 #define PI 3.14159265358979323846
 #define EPSILON 1e-9
@@ -263,6 +265,20 @@ inline void rotateVectorAroundZ(Math::Vector3D &vector, double cosA, double sinA
     const double newY = vector._xCmp * sinA + vector._yCmp * cosA;
     vector._xCmp = newX;
     vector._yCmp = newY;
+}
+
+inline void applyMaterial(
+    hitRecord &record,
+    const RayTracer::Ray &ray,
+    const std::unique_ptr<RayTracer::Interfaces::IMaterial> &material)
+{
+    if (!material)
+        return;
+    record.color = material->getColor();
+    record.reflectivity = material->getReflectivity();
+    if (record.reflectivity > 0.0)
+        record.reflectedDirection = material->getReflectedDirection(
+            ray._direction, record.normal);
 }
 
 #endif /* !PRIMITIVEUTILS_HPP_ */

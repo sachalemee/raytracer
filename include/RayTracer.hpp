@@ -23,6 +23,8 @@ struct hitRecord {
     double t; //distance along the radius
     Math::Vector3D color; //material color
     bool frontFace; //ray hits front face or back face
+    double reflectivity = 0.0; //material reflectivity [0, 1]
+    Math::Vector3D reflectedDirection; //reflected ray direction (if reflectivity > 0)
 };
 
 int error_handling(int ac, char **av);
