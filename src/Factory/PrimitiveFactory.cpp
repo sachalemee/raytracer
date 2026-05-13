@@ -11,7 +11,6 @@
 #include "Cylinder.hpp"
 #include "Cone.hpp"
 #include "FlatColor.hpp"
-#include "ITransformable.hpp"
 #include "Point3D.hpp"
 #include "Vector3D.hpp"
 #include "Colors.hpp"
@@ -50,20 +49,16 @@ static std::unique_ptr<RayTracer::FlatColor> parseColor(const libconfig::Setting
     return std::make_unique<RayTracer::FlatColor>(color);
 }
 
-static void applyTranslation(
-    RayTracer::Interfaces::IHittable *primitive,
-    const libconfig::Setting &setting)
+template<typename T>
+static void applyTranslation(std::unique_ptr<T> &primitive, const libconfig::Setting &setting)
 {
     if (!setting.exists("translate"))
-        return;
-    auto *transformable = dynamic_cast<RayTracer::Interfaces::ITransformable *>(primitive);
-    if (!transformable)
         return;
     const libconfig::Setting &t = setting["translate"];
     double x = t["x"];
     double y = t["y"];
     double z = t["z"];
-    transformable->translate(Math::Vector3D(x, y, z));
+    primitive->translate(Math::Vector3D(x, y, z));
 }
 
 std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createSphere(const libconfig::Setting &setting)
@@ -77,7 +72,7 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createSphere
     if (setting.exists("color"))
         material = parseColor(setting["color"]);
     auto sphere = std::make_unique<RayTracer::Sphere>(Math::Point3D(x, y, z), radius, std::move(material));
-    applyTranslation(sphere.get(), setting);
+    applyTranslation(sphere, setting);
     return sphere;
 }
 
@@ -102,7 +97,7 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createPlane(
     if (setting.exists("color"))
         material = parseColor(setting["color"]);
     auto plane = std::make_unique<RayTracer::Plane>(pos, normal, std::move(material));
-    applyTranslation(plane.get(), setting);
+    applyTranslation(plane, setting);
     return plane;
 }
 
@@ -118,7 +113,7 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCylind
     if (setting.exists("color"))
         material = parseColor(setting["color"]);
     auto cylinder = std::make_unique<RayTracer::Cylinder>(Math::Point3D(x, y, z), radius, height, std::move(material));
-    applyTranslation(cylinder.get(), setting);
+    applyTranslation(cylinder, setting);
     return cylinder;
 }
 
@@ -134,6 +129,6 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCone(c
     if (setting.exists("color"))
         material = parseColor(setting["color"]);
     auto cone = std::make_unique<RayTracer::Cone>(Math::Point3D(x, y, z), height, radius, std::move(material));
-    applyTranslation(cone.get(), setting);
+    applyTranslation(cone, setting);
     return cone;
 }
