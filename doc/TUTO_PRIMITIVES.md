@@ -57,7 +57,7 @@ Elle effectue tous les calculs géométriques nécessaires afin de déterminer s
 La méthode suit toujours les mêmes étapes :
 
 1. Calculer l’intersection rayon-objet
-2. Retourner std::nullopt si aucune collision n’existe
+2. Retourner `std::nullopt` si aucune collision n’existe
 3. Construire un hitRecord valide si une intersection est trouvée
 
 Le hitRecord doit contenir :
