@@ -11,6 +11,7 @@
 #include "Cylinder.hpp"
 #include "Cone.hpp"
 #include "FlatColor.hpp"
+#include "Mirror.hpp"
 #include "Point3D.hpp"
 #include "Vector3D.hpp"
 #include "Colors.hpp"
@@ -46,6 +47,24 @@ static std::unique_ptr<RayTracer::FlatColor> parseColor(const libconfig::Setting
         color = RayTracer::Colors::WHITE;
     }
 
+    return std::make_unique<RayTracer::FlatColor>(color);
+}
+
+static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseMaterial(
+    const libconfig::Setting &setting)
+{
+    double reflectivity = 0.0;
+    if (setting.exists("reflectivity"))
+        reflectivity = setting["reflectivity"];
+
+    Math::Vector3D color(1, 1, 1);
+    if (setting.exists("color")) {
+        auto flatColor = parseColor(setting["color"]);
+        color = flatColor->getColor();
+    }
+
+    if (reflectivity > 0.0)
+        return std::make_unique<RayTracer::Mirror>(color, reflectivity);
     return std::make_unique<RayTracer::FlatColor>(color);
 }
 
@@ -87,10 +106,10 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createSphere
     double y = setting["y"];
     double z = setting["z"];
     double radius = setting["r"];
-    std::unique_ptr<RayTracer::FlatColor> material;
+    std::unique_ptr<RayTracer::Interfaces::IMaterial> material;
 
-    if (setting.exists("color"))
-        material = parseColor(setting["color"]);
+    if (setting.exists("color") || setting.exists("reflectivity"))
+        material = parseMaterial(setting);
     auto sphere = std::make_unique<RayTracer::Sphere>(Math::Point3D(x, y, z), radius, std::move(material));
     applyTranslation(sphere, setting);
     applyRotation(sphere, setting);
@@ -114,9 +133,9 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createPlane(
         normal = Math::Vector3D(0, 0, 1);
         pos = Math::Point3D(0, 0, position);
     }
-    std::unique_ptr<RayTracer::FlatColor> material;
-    if (setting.exists("color"))
-        material = parseColor(setting["color"]);
+    std::unique_ptr<RayTracer::Interfaces::IMaterial> material;
+    if (setting.exists("color") || setting.exists("reflectivity"))
+        material = parseMaterial(setting);
     auto plane = std::make_unique<RayTracer::Plane>(pos, normal, std::move(material));
     applyTranslation(plane, setting);
     applyRotation(plane, setting);
@@ -130,10 +149,10 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCylind
     double z = setting["z"];
     double radius = setting["r"];
     double height = setting["height"];
-    std::unique_ptr<RayTracer::FlatColor> material;
+    std::unique_ptr<RayTracer::Interfaces::IMaterial> material;
 
-    if (setting.exists("color"))
-        material = parseColor(setting["color"]);
+    if (setting.exists("color") || setting.exists("reflectivity"))
+        material = parseMaterial(setting);
     auto cylinder = std::make_unique<RayTracer::Cylinder>(Math::Point3D(x, y, z), radius, height, std::move(material));
     applyRotation(cylinder, setting);
     applyTranslation(cylinder, setting);
@@ -147,10 +166,10 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCone(c
     double z = setting["z"];
     double height = setting["height"];
     double radius = setting["r"];
-    std::unique_ptr<RayTracer::FlatColor> material;
+    std::unique_ptr<RayTracer::Interfaces::IMaterial> material;
 
-    if (setting.exists("color"))
-        material = parseColor(setting["color"]);
+    if (setting.exists("color") || setting.exists("reflectivity"))
+        material = parseMaterial(setting);
     auto cone = std::make_unique<RayTracer::Cone>(Math::Point3D(x, y, z), height, radius, std::move(material));
     applyRotation(cone, setting);
     applyTranslation(cone, setting);

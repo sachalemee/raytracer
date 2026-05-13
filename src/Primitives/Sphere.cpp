@@ -27,8 +27,7 @@ std::optional<hitRecord> RayTracer::Sphere::hits(const RayTracer::Ray &ray) cons
     if (!distance)
         return std::nullopt;
     auto record = buildSpherehitRecord(ray, *distance, _sphCenter);
-    if (_material)
-        record.color = _material->getColor();
+    applyMaterial(record, ray, _material);
     return record;
 }
 

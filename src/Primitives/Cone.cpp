@@ -24,8 +24,8 @@ std::optional<hitRecord> RayTracer::Cone::hits(const RayTracer::Ray &ray) const
 
     considerHit(best, _intersectSurface(ray));
     considerHit(best, _intersectBase(ray));
-    if (best && _material)
-        best->color = _material->getColor();
+    if (best)
+        applyMaterial(*best, ray, _material);
     return best;
 }
 

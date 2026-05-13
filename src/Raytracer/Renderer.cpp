@@ -7,9 +7,13 @@
 
 #include "Renderer.hpp"
 #include "LightCalculator.hpp"
+#include "Ray.hpp"
+#include "PrimitiveUtils.hpp"
 #include <fstream>
 #include <sstream>
 #include <cmath>
+
+static constexpr int MAX_REFLECTION_DEPTH = 5;
 
 RayTracer::Renderer::Renderer(const Scene &scene)
     : _scene(scene)
@@ -94,15 +98,33 @@ std::optional<hitRecord> RayTracer::Renderer::findClosestHit(
 }
 
 Math::Vector3D RayTracer::Renderer::computePixelColor(
-    const std::optional<hitRecord> &closestHit)
+    const std::optional<hitRecord> &closestHit, int depth)
 {
-    const std::vector<std::unique_ptr<Interfaces::ILight>>&lights = _scene.getLights();
-    const std::vector<std::unique_ptr<Interfaces::IHittable>>&primitives = _scene.getPrimitives();
+    const std::vector<std::unique_ptr<Interfaces::ILight>> &lights = _scene.getLights();
+    const std::vector<std::unique_ptr<Interfaces::IHittable>> &primitives = _scene.getPrimitives();
 
-    Math::Vector3D backgroundColor(0, 0, 0);
     if (!closestHit)
-        return backgroundColor;
-    return LightCalculator::compute(*closestHit, lights, primitives);
+        return Math::Vector3D(0, 0, 0);
+
+    Math::Vector3D litColor = LightCalculator::compute(*closestHit, lights, primitives);
+
+    if (closestHit->reflectivity <= 0.0 || depth >= MAX_REFLECTION_DEPTH)
+        return litColor;
+
+    Math::Point3D reflectOrigin(
+        closestHit->point._xCmp + closestHit->normal._xCmp * 1e-4,
+        closestHit->point._yCmp + closestHit->normal._yCmp * 1e-4,
+        closestHit->point._zCmp + closestHit->normal._zCmp * 1e-4
+    );
+    Ray reflectRay(reflectOrigin, closestHit->reflectedDirection);
+    Math::Vector3D reflectedColor = computePixelColor(findClosestHit(reflectRay), depth + 1);
+
+    double r = closestHit->reflectivity;
+    return Math::Vector3D(
+        (1.0 - r) * litColor._xCmp + r * reflectedColor._xCmp,
+        (1.0 - r) * litColor._yCmp + r * reflectedColor._yCmp,
+        (1.0 - r) * litColor._zCmp + r * reflectedColor._zCmp
+    );
 }
 
 void RayTracer::Renderer::writeColor(std::ostream &out,
