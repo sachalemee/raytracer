@@ -61,6 +61,26 @@ static void applyTranslation(std::unique_ptr<T> &primitive, const libconfig::Set
     primitive->translate(Math::Vector3D(x, y, z));
 }
 
+template<typename T>
+static void applyRotation(std::unique_ptr<T> &primitive, const libconfig::Setting &setting)
+{
+    if (!setting.exists("rotation"))
+        return;
+    const libconfig::Setting &r = setting["rotation"];
+    if (r.exists("x")) {
+        double angleX = r["x"];
+        primitive->rotateX(angleX);
+    }
+    if (r.exists("y")) {
+        double angleY = r["y"];
+        primitive->rotateY(angleY);
+    }
+    if (r.exists("z")) {
+        double angleZ = r["z"];
+        primitive->rotateZ(angleZ);
+    }
+}
+
 std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createSphere(const libconfig::Setting &setting)
 {
     double x = setting["x"];
@@ -73,6 +93,7 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createSphere
         material = parseColor(setting["color"]);
     auto sphere = std::make_unique<RayTracer::Sphere>(Math::Point3D(x, y, z), radius, std::move(material));
     applyTranslation(sphere, setting);
+    applyRotation(sphere, setting);
     return sphere;
 }
 
@@ -98,6 +119,7 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createPlane(
         material = parseColor(setting["color"]);
     auto plane = std::make_unique<RayTracer::Plane>(pos, normal, std::move(material));
     applyTranslation(plane, setting);
+    applyRotation(plane, setting);
     return plane;
 }
 
@@ -113,6 +135,7 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCylind
     if (setting.exists("color"))
         material = parseColor(setting["color"]);
     auto cylinder = std::make_unique<RayTracer::Cylinder>(Math::Point3D(x, y, z), radius, height, std::move(material));
+    applyRotation(cylinder, setting);
     applyTranslation(cylinder, setting);
     return cylinder;
 }
@@ -129,6 +152,7 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCone(c
     if (setting.exists("color"))
         material = parseColor(setting["color"]);
     auto cone = std::make_unique<RayTracer::Cone>(Math::Point3D(x, y, z), height, radius, std::move(material));
+    applyRotation(cone, setting);
     applyTranslation(cone, setting);
     return cone;
 }
