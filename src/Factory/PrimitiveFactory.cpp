@@ -54,15 +54,14 @@ static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseMaterial(
     const libconfig::Setting &setting)
 {
     double reflectivity = 0.0;
+
     if (setting.exists("reflectivity"))
         reflectivity = setting["reflectivity"];
-
     Math::Vector3D color(1, 1, 1);
     if (setting.exists("color")) {
         auto flatColor = parseColor(setting["color"]);
         color = flatColor->getColor();
     }
-
     if (reflectivity > 0.0)
         return std::make_unique<RayTracer::Mirror>(color, reflectivity);
     return std::make_unique<RayTracer::FlatColor>(color);
@@ -175,4 +174,3 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCone(c
     applyTranslation(cone, setting);
     return cone;
 }
-

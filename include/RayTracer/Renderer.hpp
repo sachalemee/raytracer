@@ -13,6 +13,8 @@
 #include "Vector3D.hpp"
 
 namespace RayTracer {
+    static constexpr int MAX_REFLECTION_DEPTH = 5;
+
     class Renderer {
         public:
             Renderer(const Scene &scene);

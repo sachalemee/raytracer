@@ -13,8 +13,6 @@
 #include <sstream>
 #include <cmath>
 
-static constexpr int MAX_REFLECTION_DEPTH = 5;
-
 RayTracer::Renderer::Renderer(const Scene &scene)
     : _scene(scene)
 {
@@ -105,26 +103,20 @@ Math::Vector3D RayTracer::Renderer::computePixelColor(
 
     if (!closestHit)
         return Math::Vector3D(0, 0, 0);
-
     Math::Vector3D litColor = LightCalculator::compute(*closestHit, lights, primitives);
-
     if (closestHit->reflectivity <= 0.0 || depth >= MAX_REFLECTION_DEPTH)
         return litColor;
-
     Math::Point3D reflectOrigin(
         closestHit->point._xCmp + closestHit->normal._xCmp * 1e-4,
         closestHit->point._yCmp + closestHit->normal._yCmp * 1e-4,
-        closestHit->point._zCmp + closestHit->normal._zCmp * 1e-4
-    );
+        closestHit->point._zCmp + closestHit->normal._zCmp * 1e-4);
     Ray reflectRay(reflectOrigin, closestHit->reflectedDirection);
     Math::Vector3D reflectedColor = computePixelColor(findClosestHit(reflectRay), depth + 1);
-
     double r = closestHit->reflectivity;
     return Math::Vector3D(
         (1.0 - r) * litColor._xCmp + r * reflectedColor._xCmp,
         (1.0 - r) * litColor._yCmp + r * reflectedColor._yCmp,
-        (1.0 - r) * litColor._zCmp + r * reflectedColor._zCmp
-    );
+        (1.0 - r) * litColor._zCmp + r * reflectedColor._zCmp);
 }
 
 void RayTracer::Renderer::writeColor(std::ostream &out,
