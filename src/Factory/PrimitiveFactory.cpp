@@ -156,3 +156,4 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCone(c
     applyTranslation(cone, setting);
     return cone;
 }
+
