@@ -16,3 +16,8 @@ Math::Vector3D RayTracer::FlatColor::getColor() const
 {
     return _color;
 }
+
+double RayTracer::FlatColor::getReflectivity() const
+{
+    return 0.0;
+}

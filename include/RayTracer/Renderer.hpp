@@ -13,6 +13,8 @@
 #include "Vector3D.hpp"
 
 namespace RayTracer {
+    static constexpr int MAX_REFLECTION_DEPTH = 5;
+
     class Renderer {
         public:
             Renderer(const Scene &scene);
@@ -31,7 +33,7 @@ namespace RayTracer {
             
             std::optional<hitRecord> findClosestHit(const Ray &ray);
             Math::Vector3D computePixelColor(
-            const std::optional<hitRecord> &closestHit);
+                const std::optional<hitRecord> &closestHit, int depth = 0);
             
             const Scene &_scene;
             /// write single pixel color to output

@@ -3,6 +3,7 @@
 -I./include/Factory
 -I./include/Interfaces
 -I./include/Lights
+-I./include/Materials
 -I./include/Math
 -I./include/Primitives
 -I./include/RayTracer

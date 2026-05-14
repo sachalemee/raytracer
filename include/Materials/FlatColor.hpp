@@ -17,6 +17,7 @@ namespace RayTracer {
             ~FlatColor() = default;
 
             Math::Vector3D getColor() const override;
+            double getReflectivity() const override;
 
         private:
             Math::Vector3D _color;
