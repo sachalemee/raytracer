@@ -17,7 +17,26 @@ Math::Vector3D RayTracer::FlatColor::getColor() const
     return _color;
 }
 
+Math::Vector3D RayTracer::FlatColor::getColorAtPoint(const Math::Point3D &point) const
+{
+    (void)point;
+    return getColor();
+}
+
 double RayTracer::FlatColor::getReflectivity() const
 {
     return 0.0;
+}
+
+Math::Vector3D RayTracer::FlatColor::getReflectedDirection(const Math::Vector3D &incident,
+    const Math::Vector3D &normal) const
+{
+    double dotProd = incident.dot(normal);
+
+    return incident - normal * (2.0 * dotProd);
+}
+
+bool RayTracer::FlatColor::isTransparent() const
+{
+    return false;
 }

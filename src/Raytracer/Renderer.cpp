@@ -8,7 +8,6 @@
 #include "Renderer.hpp"
 #include "LightCalculator.hpp"
 #include "Ray.hpp"
-#include "PrimitiveUtils.hpp"
 #include <fstream>
 #include <sstream>
 #include <cmath>
@@ -100,16 +99,18 @@ Math::Vector3D RayTracer::Renderer::computePixelColor(
 {
     const std::vector<std::unique_ptr<Interfaces::ILight>> &lights = _scene.getLights();
     const std::vector<std::unique_ptr<Interfaces::IHittable>> &primitives = _scene.getPrimitives();
+    double offsetSign;
 
     if (!closestHit)
         return Math::Vector3D(0, 0, 0);
     Math::Vector3D litColor = LightCalculator::compute(*closestHit, lights, primitives);
     if (closestHit->reflectivity <= 0.0 || depth >= MAX_REFLECTION_DEPTH)
         return litColor;
+    offsetSign = closestHit->isTransparent ? -1.0 : 1.0;
     Math::Point3D reflectOrigin(
-        closestHit->point._xCmp + closestHit->normal._xCmp * 1e-4,
-        closestHit->point._yCmp + closestHit->normal._yCmp * 1e-4,
-        closestHit->point._zCmp + closestHit->normal._zCmp * 1e-4);
+        closestHit->point._xCmp + closestHit->normal._xCmp * 1e-4 * offsetSign,
+        closestHit->point._yCmp + closestHit->normal._yCmp * 1e-4 * offsetSign,
+        closestHit->point._zCmp + closestHit->normal._zCmp * 1e-4 * offsetSign);
     Ray reflectRay(reflectOrigin, closestHit->reflectedDirection);
     Math::Vector3D reflectedColor = computePixelColor(findClosestHit(reflectRay), depth + 1);
     double r = closestHit->reflectivity;

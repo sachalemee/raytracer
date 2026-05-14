@@ -25,6 +25,7 @@ struct hitRecord {
     bool frontFace; //ray hits front face or back face
     double reflectivity = 0.0; //material reflectivity [0, 1]
     Math::Vector3D reflectedDirection; //reflected ray direction (if reflectivity > 0)
+    bool isTransparent = false; //whether material is transparent/refractive
 };
 
 int error_handling(int ac, char **av);

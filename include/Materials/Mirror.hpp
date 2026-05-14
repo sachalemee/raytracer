@@ -17,7 +17,11 @@ namespace RayTracer {
             ~Mirror() = default;
 
             Math::Vector3D getColor() const override;
+            Math::Vector3D getColorAtPoint(const Math::Point3D &point) const override;
             double getReflectivity() const override;
+            Math::Vector3D getReflectedDirection(const Math::Vector3D &incident,
+                const Math::Vector3D &normal) const override;
+            bool isTransparent() const override;
 
         private:
             Math::Vector3D _tint;

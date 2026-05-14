@@ -5,6 +5,10 @@
 ** PrimitiveFactory
 */
 
+#include <libconfig.h++>
+#include <memory>
+#include <cctype>
+#include <algorithm>
 #include "PrimitiveFactory.hpp"
 #include "Sphere.hpp"
 #include "Plane.hpp"
@@ -12,13 +16,12 @@
 #include "Cone.hpp"
 #include "FlatColor.hpp"
 #include "Mirror.hpp"
+#include "Chessboard.hpp"
+#include "TextureFromFile.hpp"
+#include "Transparency.hpp"
 #include "Point3D.hpp"
 #include "Vector3D.hpp"
 #include "Colors.hpp"
-#include <libconfig.h++>
-#include <memory>
-#include <cctype>
-#include <algorithm>
 
 static std::string toLower(const std::string &str)
 {
@@ -29,7 +32,7 @@ static std::string toLower(const std::string &str)
     return result;
 }
 
-static std::unique_ptr<RayTracer::FlatColor> parseColor(const libconfig::Setting &setting)
+static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseColor(const libconfig::Setting &setting)
 {
     Math::Vector3D color;
 
@@ -37,27 +40,90 @@ static std::unique_ptr<RayTracer::FlatColor> parseColor(const libconfig::Setting
         std::string colorName = toLower(setting.c_str());
         color = RayTracer::Colors::getColorByName(colorName);
     }
-    else if (setting.getType() == libconfig::Setting::TypeGroup) {
-        int r = setting["r"];
-        int g = setting["g"];
-        int b = setting["b"];
-        color = Math::Vector3D(r / 255.0, g / 255.0, b / 255.0);
-    }
-    else {
+    else if (setting.getType() == libconfig::Setting::TypeGroup)
+        color = Math::Vector3D(int(setting["r"]) / 255.0, int(setting["g"]) / 255.0, int(setting["b"]) / 255.0);
+    else
         color = RayTracer::Colors::WHITE;
-    }
-
     return std::make_unique<RayTracer::FlatColor>(color);
 }
 
-static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseMaterial(
+static Math::Vector3D parseColorVector(const libconfig::Setting &colorSetting)
+{
+    return Math::Vector3D(int(colorSetting["r"]) / 255.0, int(colorSetting["g"]) / 255.0, int(colorSetting["b"]) / 255.0);
+}
+
+static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseChessboard(
+    const libconfig::Setting &materialSetting)
+{
+    Math::Vector3D color1(1.0, 1.0, 1.0);
+    Math::Vector3D color2(0.0, 0.0, 0.0);
+    double scale = 10.0;
+
+    if (materialSetting.exists("color1"))
+        color1 = parseColorVector(materialSetting["color1"]);
+    if (materialSetting.exists("color2"))
+        color2 = parseColorVector(materialSetting["color2"]);
+    if (materialSetting.exists("scale"))
+        scale = materialSetting["scale"];
+    return std::make_unique<RayTracer::Chessboard>(color1, color2, scale);
+}
+
+static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseTextureFile(
+    const libconfig::Setting &materialSetting)
+{
+    std::string filepath = materialSetting["filepath"].c_str();
+    double scale = materialSetting.exists("scale") ? materialSetting["scale"] : 1.0;
+
+    return std::make_unique<RayTracer::TextureFromFile>(filepath, scale);
+}
+
+static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseTransparency(
+    const libconfig::Setting &materialSetting)
+{
+    (void)materialSetting;
+    return std::make_unique<RayTracer::Transparency>();
+}
+
+static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseMirror(
+    const libconfig::Setting &materialSetting)
+{
+    Math::Vector3D tint(1.0, 1.0, 1.0);
+    double reflectivity = 1.0;
+
+    if (materialSetting.exists("tint"))
+        tint = parseColorVector(materialSetting["tint"]);
+    if (materialSetting.exists("reflectivity"))
+        reflectivity = materialSetting["reflectivity"];
+    return std::make_unique<RayTracer::Mirror>(tint, reflectivity);
+}
+
+static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseTypedMaterial(
+    const libconfig::Setting &materialSetting)
+{
+    std::string materialType;
+
+    materialType = materialSetting["type"].c_str();
+    materialType = toLower(materialType);
+
+    if (materialType == "chessboard")
+        return parseChessboard(materialSetting);
+    else if (materialType == "texture" || materialType == "texturefile")
+        return parseTextureFile(materialSetting);
+    else if (materialType == "mirror")
+        return parseMirror(materialSetting);
+    else if (materialType == "transparency")
+        return parseTransparency(materialSetting);
+    return std::make_unique<RayTracer::FlatColor>(RayTracer::Colors::WHITE);
+}
+
+static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseLegacyMaterial(
     const libconfig::Setting &setting)
 {
     double reflectivity = 0.0;
+    Math::Vector3D color(1, 1, 1);
 
     if (setting.exists("reflectivity"))
         reflectivity = setting["reflectivity"];
-    Math::Vector3D color(1, 1, 1);
     if (setting.exists("color")) {
         auto flatColor = parseColor(setting["color"]);
         color = flatColor->getColor();
@@ -67,16 +133,24 @@ static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseMaterial(
     return std::make_unique<RayTracer::FlatColor>(color);
 }
 
+static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseMaterial(
+    const libconfig::Setting &setting)
+{
+    if (setting.exists("material")) {
+        const libconfig::Setting &materialSetting = setting["material"];
+        if (materialSetting.exists("type"))
+            return parseTypedMaterial(materialSetting);
+    }
+    return parseLegacyMaterial(setting);
+}
+
 template<typename T>
 static void applyTranslation(std::unique_ptr<T> &primitive, const libconfig::Setting &setting)
 {
     if (!setting.exists("translate"))
         return;
     const libconfig::Setting &t = setting["translate"];
-    double x = t["x"];
-    double y = t["y"];
-    double z = t["z"];
-    primitive->translate(Math::Vector3D(x, y, z));
+    primitive->translate(Math::Vector3D(double(t["x"]), double(t["y"]), double(t["z"])));
 }
 
 template<typename T>
@@ -85,18 +159,12 @@ static void applyRotation(std::unique_ptr<T> &primitive, const libconfig::Settin
     if (!setting.exists("rotation"))
         return;
     const libconfig::Setting &r = setting["rotation"];
-    if (r.exists("x")) {
-        double angleX = r["x"];
-        primitive->rotateX(angleX);
-    }
-    if (r.exists("y")) {
-        double angleY = r["y"];
-        primitive->rotateY(angleY);
-    }
-    if (r.exists("z")) {
-        double angleZ = r["z"];
-        primitive->rotateZ(angleZ);
-    }
+    if (r.exists("x"))
+        primitive->rotateX(double(r["x"]));
+    if (r.exists("y"))
+        primitive->rotateY(double(r["y"]));
+    if (r.exists("z"))
+        primitive->rotateZ(double(r["z"]));
 }
 
 std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createSphere(const libconfig::Setting &setting)
@@ -107,7 +175,7 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createSphere
     double radius = setting["r"];
     std::unique_ptr<RayTracer::Interfaces::IMaterial> material;
 
-    if (setting.exists("color") || setting.exists("reflectivity"))
+    if (setting.exists("color") || setting.exists("reflectivity") || setting.exists("material"))
         material = parseMaterial(setting);
     auto sphere = std::make_unique<RayTracer::Sphere>(Math::Point3D(x, y, z), radius, std::move(material));
     applyTranslation(sphere, setting);
@@ -133,7 +201,7 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createPlane(
         pos = Math::Point3D(0, 0, position);
     }
     std::unique_ptr<RayTracer::Interfaces::IMaterial> material;
-    if (setting.exists("color") || setting.exists("reflectivity"))
+    if (setting.exists("color") || setting.exists("reflectivity") || setting.exists("material"))
         material = parseMaterial(setting);
     auto plane = std::make_unique<RayTracer::Plane>(pos, normal, std::move(material));
     applyTranslation(plane, setting);
@@ -150,7 +218,7 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCylind
     double height = setting["height"];
     std::unique_ptr<RayTracer::Interfaces::IMaterial> material;
 
-    if (setting.exists("color") || setting.exists("reflectivity"))
+    if (setting.exists("color") || setting.exists("reflectivity") || setting.exists("material"))
         material = parseMaterial(setting);
     auto cylinder = std::make_unique<RayTracer::Cylinder>(Math::Point3D(x, y, z), radius, height, std::move(material));
     applyRotation(cylinder, setting);
@@ -167,7 +235,7 @@ std::unique_ptr<RayTracer::Interfaces::IHittable> PrimitiveFactory::createCone(c
     double radius = setting["r"];
     std::unique_ptr<RayTracer::Interfaces::IMaterial> material;
 
-    if (setting.exists("color") || setting.exists("reflectivity"))
+    if (setting.exists("color") || setting.exists("reflectivity") || setting.exists("material"))
         material = parseMaterial(setting);
     auto cone = std::make_unique<RayTracer::Cone>(Math::Point3D(x, y, z), height, radius, std::move(material));
     applyRotation(cone, setting);
