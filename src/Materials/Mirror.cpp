@@ -35,3 +35,8 @@ Math::Vector3D RayTracer::Mirror::getReflectedDirection(const Math::Vector3D &in
 
     return incident - normal * (2.0 * dotProd);
 }
+
+bool RayTracer::Mirror::isTransparent() const
+{
+    return false;
+}

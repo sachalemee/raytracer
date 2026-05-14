@@ -120,3 +120,8 @@ Math::Vector3D RayTracer::TextureFromFile::getReflectedDirection(const Math::Vec
 
     return incident - normal * (2.0 * dotProd);
 }
+
+bool RayTracer::TextureFromFile::isTransparent() const
+{
+    return false;
+}

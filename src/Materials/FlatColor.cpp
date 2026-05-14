@@ -35,3 +35,8 @@ Math::Vector3D RayTracer::FlatColor::getReflectedDirection(const Math::Vector3D 
 
     return incident - normal * (2.0 * dotProd);
 }
+
+bool RayTracer::FlatColor::isTransparent() const
+{
+    return false;
+}

@@ -42,3 +42,8 @@ Math::Vector3D RayTracer::Chessboard::getReflectedDirection(const Math::Vector3D
 
     return incident - normal * (2.0 * dotProd);
 }
+
+bool RayTracer::Chessboard::isTransparent() const
+{
+    return false;
+}
