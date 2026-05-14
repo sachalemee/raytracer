@@ -8,7 +8,6 @@
 #include "Renderer.hpp"
 #include "LightCalculator.hpp"
 #include "Ray.hpp"
-#include "PrimitiveUtils.hpp"
 #include <fstream>
 #include <sstream>
 #include <cmath>
