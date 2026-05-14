@@ -18,6 +18,7 @@
 #include "Mirror.hpp"
 #include "Chessboard.hpp"
 #include "TextureFromFile.hpp"
+#include "Transparency.hpp"
 #include "Point3D.hpp"
 #include "Vector3D.hpp"
 #include "Colors.hpp"
@@ -76,6 +77,19 @@ static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseTextureFile(
     return std::make_unique<RayTracer::TextureFromFile>(filepath, scale);
 }
 
+static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseTransparency(
+    const libconfig::Setting &materialSetting)
+{
+    double refractiveIndex = 1.5;
+    double transparency = 1.0;
+
+    if (materialSetting.exists("ior"))
+        refractiveIndex = materialSetting["ior"];
+    if (materialSetting.exists("alpha"))
+        transparency = materialSetting["alpha"];
+    return std::make_unique<RayTracer::Transparency>(refractiveIndex, transparency);
+}
+
 static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseMirror(
     const libconfig::Setting &materialSetting)
 {
@@ -103,6 +117,8 @@ static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseTypedMaterial(
         return parseTextureFile(materialSetting);
     else if (materialType == "mirror")
         return parseMirror(materialSetting);
+    else if (materialType == "transparency")
+        return parseTransparency(materialSetting);
     return std::make_unique<RayTracer::FlatColor>(RayTracer::Colors::WHITE);
 }
 
