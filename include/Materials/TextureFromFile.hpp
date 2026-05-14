@@ -25,6 +25,7 @@ namespace RayTracer {
             double getReflectivity() const override;
             Math::Vector3D getReflectedDirection(const Math::Vector3D &incident,
                 const Math::Vector3D &normal) const override;
+            bool isTransparent() const override;
 
         private:
             bool loadPPM(const std::string &filepath);

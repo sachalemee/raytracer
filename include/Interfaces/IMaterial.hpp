@@ -25,6 +25,8 @@ namespace RayTracer {
                 virtual double getReflectivity() const = 0;
                 /// return reflected ray direction given incident ray and surface normal
                 virtual Math::Vector3D getReflectedDirection(const Math::Vector3D &incident, const Math::Vector3D &normal) const = 0;
+                /// return true if material is transparent (refractive)
+                virtual bool isTransparent() const = 0;
         };
     }
 }
