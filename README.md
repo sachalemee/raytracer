@@ -49,11 +49,6 @@ This project requires:
 
 *No external graphics library is required.*
 
-## Requirements
-
-- clang++ version 20.1.8
-- **Libraries:** sfml 2.6.1
-
 ### Installation for Linux
 
 1. **Clone the repository:**
