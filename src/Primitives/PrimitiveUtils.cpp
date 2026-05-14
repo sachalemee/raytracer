@@ -261,6 +261,7 @@ void applyMaterial(hitRecord &record, const RayTracer::Ray &ray,
         return;
     record.color = material->getColorAtPoint(record.point);
     record.reflectivity = material->getReflectivity();
+    record.isTransparent = material->isTransparent();
     if (record.reflectivity > 0.0)
         record.reflectedDirection = material->getReflectedDirection(
             ray._direction, record.normal);
