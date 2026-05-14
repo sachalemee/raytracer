@@ -13,7 +13,7 @@
 namespace RayTracer {
     class Transparency : public Interfaces::IMaterial {
         public:
-            Transparency(double refractiveIndex = 1.5, double transparency = 1.0);
+            Transparency();
             ~Transparency() = default;
 
             Math::Vector3D getColor() const override;
@@ -24,8 +24,6 @@ namespace RayTracer {
             bool isTransparent() const override;
 
         private:
-            double _refractiveIndex;
-            double _transparency;
     };
 }
 

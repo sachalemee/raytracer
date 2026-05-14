@@ -80,14 +80,8 @@ static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseTextureFile(
 static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseTransparency(
     const libconfig::Setting &materialSetting)
 {
-    double refractiveIndex = 1.5;
-    double transparency = 1.0;
-
-    if (materialSetting.exists("ior"))
-        refractiveIndex = materialSetting["ior"];
-    if (materialSetting.exists("alpha"))
-        transparency = materialSetting["alpha"];
-    return std::make_unique<RayTracer::Transparency>(refractiveIndex, transparency);
+    (void)materialSetting;
+    return std::make_unique<RayTracer::Transparency>();
 }
 
 static std::unique_ptr<RayTracer::Interfaces::IMaterial> parseMirror(
