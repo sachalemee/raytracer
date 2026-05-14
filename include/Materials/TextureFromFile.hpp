@@ -12,6 +12,8 @@
     #include <string>
     #include "IMaterial.hpp"
 
+    #define PPM_MAGIC "P6"
+
 namespace RayTracer {
     class TextureFromFile : public Interfaces::IMaterial {
         public:

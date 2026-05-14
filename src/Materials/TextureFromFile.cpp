@@ -19,7 +19,7 @@ bool RayTracer::TextureFromFile::readPPMHeader(std::ifstream &file,
     std::string &magic, int &maxColor)
 {
     file >> magic;
-    if (magic != "P6")
+    if (magic != PPM_MAGIC)
         return false;
     file >> _width >> _height >> maxColor;
     file.ignore();
