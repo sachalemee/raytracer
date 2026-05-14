@@ -406,3 +406,5 @@ Voici les erreurs qui reviennent le plus souvent lors de l’ajout d’une primi
 - oublier d’ajouter la primitive dans `SceneBuilder`
 
 En général, si votre primitive s’affiche mais que l’éclairage paraît incorrect, le problème vient souvent de la normale.
+
+![RAYTRACER PRIMITIVE TUTO](../screenshots/room_all_primitives_mirror_1920x1080.png)
