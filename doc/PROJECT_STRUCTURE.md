@@ -1,3 +1,6 @@
+
+![RAYTRACER UML ARCHITECTURE](uml_raytracer.png)
+
 ```text
 .
 ├── CMakeCache.txt
