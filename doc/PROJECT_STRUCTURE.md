@@ -10,8 +10,6 @@
 ├── compile_flags.txt
 ├── doc
 │   ├── DOCUMENTATION.md
-│   ├── G-OOP-400_raytracer_bootstrap_cpp.pdf
-│   ├── G-OOP-400_raytracer.pdf
 │   ├── Minecraft-vs-RealLife.png
 │   ├── PROJECT_STRUCTURE.md
 │   ├── TUTO_MATERIALS.md
